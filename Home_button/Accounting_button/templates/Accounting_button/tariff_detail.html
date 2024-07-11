@@ -1,0 +1,25 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Tariff Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Приветствие пользователя -->
+    <div class="alert alert-info" role="alert">
+        Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </div>
+    
+    <h2>Tariff Detail</h2>
+    <dl class="row">
+        <dt class="col-sm-3">Tariff Name</dt>
+        <dd class="col-sm-9">{{ object.tariff_name }}</dd>
+
+        <dt class="col-sm-3">Cost per Minute</dt>
+        <dd class="col-sm-9">{{ object.cost_per_minute }}</dd>
+
+        <dt class="col-sm-3">Comments</dt>
+        <dd class="col-sm-9">{{ object.comments }}</dd>
+    </dl>
+    <a href="{% url 'tariffs_list' %}" class="btn btn-primary">Back to Tariffs</a>
+</div>
+{% endblock %}

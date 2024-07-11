@@ -1,0 +1,17 @@
+touch .gitignore
+echo "
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+static/
+
+# Pipenv
+*.env
+
+# macOS
+.DS_Store
+" > .gitignore

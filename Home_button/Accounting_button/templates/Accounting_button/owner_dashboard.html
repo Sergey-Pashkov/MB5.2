@@ -1,0 +1,15 @@
+<!-- Accounting_button/templates/Accounting_button/owner_dashboard.html -->
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Owner Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Welcome, {{ request.user.first_name }}!</h1>
+    <p>This is the owner dashboard.</p>
+    <!-- Кнопка для перехода на справочник должностей -->
+    <a href="{% url 'positions_list' %}" class="btn btn-warning">View Positions Directory</a>
+    <!-- Кнопка для перехода на справочник тарифов -->
+    <a href="{% url 'tariffs_list' %}" class="btn btn-warning">View Tariffs Directory</a>
+</div>
+{% endblock %}

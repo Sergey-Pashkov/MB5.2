@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    {% load static %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Site</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" style="padding: 0;">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <!-- Button to return to the respective dashboard -->
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                {% if user.user_type == 'owner' %}
+                    <a href="{% url 'owner_dashboard' %}" class="btn btn-secondary">Return to Dashboard</a>
+                {% elif user.user_type == 'organizer' %}
+                    <a href="{% url 'organizer_dashboard' %}" class="btn btn-secondary">Return to Dashboard</a>
+                {% elif user.user_type == 'executor' %}
+                    <a href="{% url 'executor_dashboard' %}" class="btn btn-secondary">Return to Dashboard</a>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

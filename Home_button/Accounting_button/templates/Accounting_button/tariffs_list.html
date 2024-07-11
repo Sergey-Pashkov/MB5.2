@@ -1,0 +1,34 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Tariffs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Приветствие пользователя -->
+    <div class="alert alert-info" role="alert">
+        Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </div>
+
+    <h2>Tariffs</h2>
+    <ul class="list-group">
+        {% for tariff in object_list %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'tariff_detail' tariff.pk %}">{{ tariff.tariff_name }}</a>
+                    <p>Cost per minute: {{ tariff.cost_per_minute }}</p>
+                    <p>{{ tariff.comments }}</p>
+                </div>
+                {% if user.user_type == 'owner' %}
+                    <span class="btn-group">
+                        <a href="{% url 'tariff_edit' tariff.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                        <a href="{% url 'tariff_delete' tariff.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if user.user_type == 'owner' %}
+        <a href="{% url 'tariff_create' %}" class="btn btn-primary mt-3">Add Tariff</a>
+    {% endif %}
+</div>
+{% endblock %}

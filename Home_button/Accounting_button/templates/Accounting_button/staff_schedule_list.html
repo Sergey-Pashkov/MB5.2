@@ -1,0 +1,18 @@
+{% extends 'Accounting_button/base.html' %}
+{% block content %}
+<h2>Staff Schedule</h2>
+<ul>
+    {% for schedule in object_list %}
+        <li>
+            <a href="{% url 'staff_schedule_detail' schedule.pk %}">{{ schedule.position }} - {{ schedule.quantity }}</a>
+            {% if user.user_type == 'owner' %}
+                <a href="{% url 'staff_schedule_edit' schedule.pk %}">Edit</a>
+                <a href="{% url 'staff_schedule_delete' schedule.pk %}">Delete</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% if user.user_type == 'owner' %}
+    <a href="{% url 'staff_schedule_create' %}" class="btn btn-primary">Add Staff Schedule</a>
+{% endif %}
+{% endblock %}
