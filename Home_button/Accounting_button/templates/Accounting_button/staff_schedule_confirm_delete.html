@@ -1,0 +1,18 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </div>
+
+    <h2>Are you sure you want to delete "{{ object }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirm</button>
+        <a href="{% url 'staff_schedule_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

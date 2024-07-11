@@ -1,18 +1,33 @@
 {% extends 'Accounting_button/base.html' %}
+
+{% block title %}Staff Schedule{% endblock %}
+
 {% block content %}
-<h2>Staff Schedule</h2>
-<ul>
-    {% for schedule in object_list %}
-        <li>
-            <a href="{% url 'staff_schedule_detail' schedule.pk %}">{{ schedule.position }} - {{ schedule.quantity }}</a>
-            {% if user.user_type == 'owner' %}
-                <a href="{% url 'staff_schedule_edit' schedule.pk %}">Edit</a>
-                <a href="{% url 'staff_schedule_delete' schedule.pk %}">Delete</a>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
-{% if user.user_type == 'owner' %}
-    <a href="{% url 'staff_schedule_create' %}" class="btn btn-primary">Add Staff Schedule</a>
-{% endif %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </div>
+    
+    <h2>Staff Schedules</h2>
+    <ul class="list-group">
+        {% for schedule in object_list %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'staff_schedule_detail' schedule.pk %}">{{ schedule.position }} - {{ schedule.quantity }}</a>
+                    <p>Working Time: {{ schedule.total_working_time }} minutes</p>
+                    <p>Salary Fund: {{ schedule.total_salary_fund }} руб.</p>
+                </div>
+                {% if user.user_type == 'owner' %}
+                    <span class="btn-group">
+                        <a href="{% url 'staff_schedule_edit' schedule.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                        <a href="{% url 'staff_schedule_delete' schedule.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if user.user_type == 'owner' %}
+        <a href="{% url 'staff_schedule_create' %}" class="btn btn-primary mt-3">Add Staff Schedule</a>
+    {% endif %}
+</div>
 {% endblock %}

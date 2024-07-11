@@ -1,0 +1,36 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Staff Schedule Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </div>
+    
+    <h2>Staff Schedule Detail</h2>
+    <dl class="row">
+        <dt class="col-sm-3">User</dt>
+        <dd class="col-sm-9">{{ object.user_name }}</dd>
+
+        <dt class="col-sm-3">Position</dt>
+        <dd class="col-sm-9">{{ object.position }}</dd>
+
+        <dt class="col-sm-3">Tariff</dt>
+        <dd class="col-sm-9">{{ object.tariff }}</dd>
+
+        <dt class="col-sm-3">Quantity</dt>
+        <dd class="col-sm-9">{{ object.quantity }}</dd>
+
+        <dt class="col-sm-3">Norm Time per Month</dt>
+        <dd class="col-sm-9">{{ object.norm_time_per_month }} minutes</dd>
+
+        <dt class="col-sm-3">Total Working Time</dt>
+        <dd class="col-sm-9">{{ object.total_working_time }} minutes</dd>
+
+        <dt class="col-sm-3">Total Salary Fund</dt>
+        <dd class="col-sm-9">{{ object.total_salary_fund }} руб.</dd>
+    </dl>
+    <a href="{% url 'staff_schedule_list' %}" class="btn btn-primary">Back to Staff Schedules</a>
+</div>
+{% endblock %}

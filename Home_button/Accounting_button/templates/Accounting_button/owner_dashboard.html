@@ -1,4 +1,3 @@
-<!-- Accounting_button/templates/Accounting_button/owner_dashboard.html -->
 {% extends 'Accounting_button/base.html' %}
 
 {% block title %}Owner Dashboard{% endblock %}
@@ -11,5 +10,7 @@
     <a href="{% url 'positions_list' %}" class="btn btn-warning">View Positions Directory</a>
     <!-- Кнопка для перехода на справочник тарифов -->
     <a href="{% url 'tariffs_list' %}" class="btn btn-warning">View Tariffs Directory</a>
+    <!-- Кнопка для перехода на страницу штатного расписания -->
+    <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning">View Staff Schedule</a>
 </div>
 {% endblock %}

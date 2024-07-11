@@ -142,8 +142,6 @@ class PositionDirectoryDeleteView(DeleteView):
     success_url = reverse_lazy('positions_list')
 
 
-
-
 # Список всех тарифов
 @method_decorator(owner_or_organizer_required, name='dispatch')
 class TariffDirectoryListView(ListView):
