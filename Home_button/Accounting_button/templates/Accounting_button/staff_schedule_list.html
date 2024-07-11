@@ -26,6 +26,12 @@
             </li>
         {% endfor %}
     </ul>
+    <div class="mt-4">
+        <h3>Total Indicators</h3>
+        <p>Total Quantity: {{ total_quantity }} persons</p>
+        <p>Total Working Time: {{ total_working_time_hours }} hours ({{ total_working_time_minutes }} minutes)</p>
+        <p>Total Salary Fund: {{ total_salary_fund }} руб.</p>
+    </div>
     {% if user.user_type == 'owner' %}
         <a href="{% url 'staff_schedule_create' %}" class="btn btn-primary mt-3">Add Staff Schedule</a>
     {% endif %}

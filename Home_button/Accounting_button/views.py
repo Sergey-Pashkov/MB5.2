@@ -181,10 +181,27 @@ class TariffDirectoryDeleteView(DeleteView):
 
 
 # Список всего штатного расписания
+from django.shortcuts import render
+from django.views.generic import ListView
+from .models import StaffSchedule
+
 @method_decorator(owner_or_organizer_required, name='dispatch')
 class StaffScheduleListView(ListView):
     model = StaffSchedule
     template_name = 'Accounting_button/staff_schedule_list.html'  # Исправлено
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_quantity = sum(schedule.quantity for schedule in self.object_list)
+        total_working_time_minutes = sum(schedule.total_working_time for schedule in self.object_list)
+        total_salary_fund = sum(schedule.total_salary_fund for schedule in self.object_list)
+        total_working_time_hours = total_working_time_minutes // 60
+        context['total_quantity'] = total_quantity
+        context['total_working_time_minutes'] = total_working_time_minutes
+        context['total_working_time_hours'] = total_working_time_hours
+        context['total_salary_fund'] = total_salary_fund
+        return context
+
 
 # Детали конкретного штатного расписания
 @method_decorator(owner_or_organizer_required, name='dispatch')
