@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import MyUser
+from simple_history.admin import SimpleHistoryAdmin
+
 
 class MyUserAdmin(UserAdmin):
     model = MyUser
@@ -40,8 +42,12 @@ class TariffDirectoryAdmin(admin.ModelAdmin):
     list_display = ('tariff_name', 'cost_per_minute', 'comments')  # Поля, которые будут отображаться в списке объектов
 
 # Регистрация модели StaffSchedule в админке
+from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
+from .models import StaffSchedule
+
 @admin.register(StaffSchedule)
-class StaffScheduleAdmin(admin.ModelAdmin):
+class StaffScheduleAdmin(SimpleHistoryAdmin):
     list_display = ('position', 'tariff', 'quantity', 'norm_time_per_month', 'total_working_time', 'total_salary_fund')  # Поля, которые будут отображаться в списке объектов
     readonly_fields = ('total_working_time', 'total_salary_fund')  # Поля, которые будут отображаться как только для чтения
 
@@ -49,3 +55,5 @@ class StaffScheduleAdmin(admin.ModelAdmin):
 # admin.site.register(PositionDirectory)
 # admin.site.register(TariffDirectory)
 # admin.site.register(StaffSchedule)
+
+

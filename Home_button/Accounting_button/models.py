@@ -63,6 +63,8 @@ class TariffDirectory(models.Model):
         return self.tariff_name  # Отображение названия тарифа при вызове str()
 
 # Модель штатного расписания
+from simple_history.models import HistoricalRecords
+
 class StaffSchedule(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     user_name = models.CharField(max_length=255, null=True, blank=True)  # Поле для хранения имени пользователя
@@ -72,6 +74,7 @@ class StaffSchedule(models.Model):
     norm_time_per_month = models.IntegerField()  # Поле для хранения нормы времени в месяц на одного человека (в минутах)
     total_working_time = models.IntegerField(editable=False)  # Поле для хранения общего рабочего времени (рассчитывается автоматически)
     total_salary_fund = models.DecimalField(max_digits=15, decimal_places=2, editable=False)  # Поле для хранения фонда оплаты труда (рассчитывается автоматически)
+    history = HistoricalRecords()  # Поле для хранения истории изменений
 
     # Метод для сохранения модели с расчетом total_working_time и total_salary_fund
     def save(self, *args, **kwargs):
@@ -90,4 +93,3 @@ class StaffSchedule(models.Model):
             models.CheckConstraint(check=models.Q(quantity__gte=1) & models.Q(quantity__lte=1000), name='quantity_range'),
             models.CheckConstraint(check=models.Q(norm_time_per_month__gte=1) & models.Q(norm_time_per_month__lte=44000), name='norm_time_per_month_range'),  # Обновлено максимальное значение
         ]
-

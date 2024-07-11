@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Accounting_button',  # Убедитесь, что ваше приложение Accounting_button добавлено сюда
+    'simple_history',
 ]
 
 
