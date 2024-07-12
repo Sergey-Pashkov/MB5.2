@@ -7,15 +7,16 @@ from django.views.generic import TemplateView, FormView, View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView as AuthLoginView
 
-class LoginView(FormView):
+
+class LoginView(AuthLoginView):
     template_name = 'Accounting_button/login.html'
-    form_class = AuthenticationForm
 
-    def form_valid(self, form):
-        user = form.get_user()
-        login(self.request, user)
-        return redirect('dashboard_redirect')
+    def get_success_url(self):
+        return reverse_lazy('dashboard_redirect')
+
+
 
 @method_decorator(login_required, name='dispatch')
 class DashboardRedirectView(View):

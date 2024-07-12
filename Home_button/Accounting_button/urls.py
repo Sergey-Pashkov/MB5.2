@@ -1,10 +1,7 @@
-
 # Accounting_button/urls.py
 
 from django.urls import path
-from .views import LoginView, OwnerDashboardView, OrganizerDashboardView, ExecutorDashboardView, DashboardRedirectView
-
-from django.urls import path
+from .views import LoginView, DashboardRedirectView, OwnerDashboardView, OrganizerDashboardView, ExecutorDashboardView
 from django.views.generic import TemplateView
 from .views import (
     PositionDirectoryListView, PositionDirectoryDetailView, PositionDirectoryCreateView,
