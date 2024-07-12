@@ -54,13 +54,18 @@ class PositionDirectory(models.Model):
         return self.position  # Отображение названия должности при вызове str()
 
 # Модель справочника тарифов исполнителей
+from django.db import models
+from simple_history.models import HistoricalRecords
+
 class TariffDirectory(models.Model):
     tariff_name = models.CharField(max_length=255)  # Поле для хранения названия тарифа
     cost_per_minute = models.DecimalField(max_digits=10, decimal_places=2)  # Поле для хранения стоимости минуты рабочего времени
     comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+    history = HistoricalRecords()  # Поле для хранения истории изменений
 
     def __str__(self):
         return self.tariff_name  # Отображение названия тарифа при вызове str()
+
 
 # Модель штатного расписания
 from simple_history.models import HistoricalRecords

@@ -37,9 +37,17 @@ class PositionDirectoryAdmin(admin.ModelAdmin):
     list_display = ('position', 'comments')  # Поля, которые будут отображаться в списке объектов
 
 # Регистрация модели TariffDirectory в админке
+from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
+from .models import TariffDirectory
+
 @admin.register(TariffDirectory)
-class TariffDirectoryAdmin(admin.ModelAdmin):
-    list_display = ('tariff_name', 'cost_per_minute', 'comments')  # Поля, которые будут отображаться в списке объектов
+class TariffDirectoryAdmin(SimpleHistoryAdmin):
+    list_display = ('tariff_name', 'cost_per_minute', 'comments')
+
+
+
+
 
 # Регистрация модели StaffSchedule в админке
 from django.contrib import admin
