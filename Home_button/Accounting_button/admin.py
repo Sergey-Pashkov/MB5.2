@@ -64,9 +64,14 @@ class StaffScheduleAdmin(SimpleHistoryAdmin):
 # admin.site.register(TariffDirectory)
 # admin.site.register(StaffSchedule)
 
-
 from django.contrib import admin
-from .models import OrganizerPositionDirectory
+from .models import OrganizerPositionDirectory, OrganizerTariff
 
 # Регистрация модели OrganizerPositionDirectory в админке
 admin.site.register(OrganizerPositionDirectory)
+
+# Регистрация модели OrganizerTariff в админке
+@admin.register(OrganizerTariff)
+class OrganizerTariffAdmin(admin.ModelAdmin):
+    list_display = ('position', 'rate', 'base')
+    search_fields = ('position__position',)

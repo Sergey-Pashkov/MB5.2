@@ -17,6 +17,8 @@ from .views import (
     OrganizerPositionDirectoryDeleteView,
     OwnerDashboardView  
 )
+from django.urls import path
+from .views import OrganizerTariffListView, OrganizerTariffCreateView, OrganizerTariffDetailView, OrganizerTariffUpdateView, OrganizerTariffDeleteView
 
 
 urlpatterns = [
@@ -53,4 +55,19 @@ urlpatterns = [
     path('organizer_positions/<int:pk>/', OrganizerPositionDirectoryDetailView.as_view(), name='organizer_position_detail'),  # URL для просмотра деталей должности
     path('organizer_positions/<int:pk>/edit/', OrganizerPositionDirectoryUpdateView.as_view(), name='organizer_position_edit'),  # URL для редактирования должности
     path('organizer_positions/<int:pk>/delete/', OrganizerPositionDirectoryDeleteView.as_view(), name='organizer_position_delete'),  # URL для удаления должности
+
+    # URL для списка тарифов организаторов
+    path('organizer_tariffs/', OrganizerTariffListView.as_view(), name='organizer_tariffs_list'),
+    
+    # URL для создания нового тарифа
+    path('organizer_tariffs/new/', OrganizerTariffCreateView.as_view(), name='organizer_tariff_create'),
+    
+    # URL для просмотра деталей тарифа
+    path('organizer_tariffs/<int:pk>/', OrganizerTariffDetailView.as_view(), name='organizer_tariff_detail'),
+    
+    # URL для редактирования тарифа
+    path('organizer_tariffs/<int:pk>/edit/', OrganizerTariffUpdateView.as_view(), name='organizer_tariff_edit'),
+    
+    # URL для удаления тарифа
+    path('organizer_tariffs/<int:pk>/delete/', OrganizerTariffDeleteView.as_view(), name='organizer_tariff_delete'),
 ]

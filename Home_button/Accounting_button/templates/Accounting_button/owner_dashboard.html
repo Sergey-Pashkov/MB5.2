@@ -7,14 +7,14 @@
     <h1>Welcome, {{ request.user.first_name }}!</h1>
     <p>This is the owner dashboard.</p>
     <!-- Кнопка для перехода на справочник должностей -->
-    <a href="{% url 'positions_list' %}" class="btn btn-warning">View Positions Directory</a>
+    <a href="{% url 'positions_list' %}" class="btn btn-warning mb-3">View Positions Directory</a>
     <!-- Кнопка для перехода на справочник тарифов -->
-    <a href="{% url 'tariffs_list' %}" class="btn btn-warning">View Tariffs Directory</a>
+    <a href="{% url 'tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
     <!-- Кнопка для перехода на страницу штатного расписания -->
-    <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning">View Staff Schedule</a>
-        <!-- Кнопка для перехода на справочник должностей организаторов-->
-     <a href="{% url 'organizer_positions_list' %}" class="btn btn-warning">Справочник должностей организаторов</a>
-     
+    <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning mb-3">View Staff Schedule</a>
+    <!-- Кнопка для перехода на справочник должностей организаторов-->
+    <a href="{% url 'organizer_positions_list' %}" class="btn btn-warning mb-3">Справочник должностей организаторов</a>
+    <!-- Кнопка для перехода на справочник тарифов -->
+    <a href="{% url 'organizer_tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
 </div>
 {% endblock %}
-

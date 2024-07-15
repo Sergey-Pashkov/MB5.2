@@ -308,3 +308,58 @@ class OrganizerPositionDirectoryDeleteView(DeleteView):
     model = OrganizerPositionDirectory
     template_name = 'Accounting_button/organizer_positions/organizer_position_confirm_delete.html'
     success_url = reverse_lazy('organizer_positions_list')
+
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from .models import OrganizerTariff, OrganizerPositionDirectory
+from .decorators import owner_required, owner_or_organizer_required
+
+# Представление для списка тарифов организаторов
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class OrganizerTariffListView(ListView):
+    model = OrganizerTariff
+    template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_list.html'
+    context_object_name = 'tariffs'
+
+# Представление для создания нового тарифа (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerTariffCreateView(CreateView):
+    model = OrganizerTariff
+    template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_form.html'
+    fields = ['position', 'rate', 'base']
+    success_url = reverse_lazy('organizer_tariffs_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Создание тарифа'
+        return context
+
+# Представление для деталей тарифа
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class OrganizerTariffDetailView(DetailView):
+    model = OrganizerTariff
+    template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_detail.html'
+
+# Представление для редактирования тарифа (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerTariffUpdateView(UpdateView):
+    model = OrganizerTariff
+    template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_form.html'
+    fields = ['position', 'rate', 'base']
+    success_url = reverse_lazy('organizer_tariffs_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Редактирование тарифа'
+        return context
+
+# Представление для удаления тарифа (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerTariffDeleteView(DeleteView):
+    model = OrganizerTariff
+    template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_confirm_delete.html'
+    success_url = reverse_lazy('organizer_tariffs_list')

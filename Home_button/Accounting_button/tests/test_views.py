@@ -4,16 +4,27 @@ from django.test import TestCase
 from django.urls import reverse
 from Accounting_button.models import MyUser, PositionDirectory, TariffDirectory, StaffSchedule
 
+from django.test import TestCase, Client
+from django.urls import reverse, resolve
+from Accounting_button.models import MyUser
+from Accounting_button.views import LoginView
+
+
 class LoginViewTestCase(TestCase):
+
     def setUp(self):
-        self.user = MyUser.objects.create_user(email='testuser@example.com', password='testpassword')
+        self.client = Client()
+        self.user = MyUser.objects.create_user(email='testuser@example.com', password='password')
+
+    def test_login_url(self):
+        url = reverse('login')
+        self.assertEqual(resolve(url).func.view_class, LoginView)
 
     def test_login_form_valid(self):
-        response = self.client.post(reverse('login'), {
-            'username': 'testuser@example.com',
-            'password': 'testpassword'
-        })
-        self.assertRedirects(response, reverse('dashboard_redirect'))
+        response = self.client.post(reverse('login'), {'username': 'testuser@example.com', 'password': 'password'})
+        self.assertRedirects(response, reverse('dashboard_redirect'), status_code=302, target_status_code=200)
+
+
 
 class DashboardRedirectViewTestCase(TestCase):
     def setUp(self):

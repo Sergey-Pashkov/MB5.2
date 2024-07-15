@@ -115,3 +115,22 @@ class OrganizerPositionDirectory(models.Model):
 
     def __str__(self):
         return self.position  # Отображение названия должности при вызове str()
+
+from django.test import TestCase
+from Accounting_button.models import OrganizerPositionDirectory
+
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+# Модель для тарифов организаторов
+class OrganizerTariff(models.Model):
+    position = models.OneToOneField(OrganizerPositionDirectory, on_delete=models.CASCADE)  # Связь с моделью OrganizerPositionDirectory
+    rate = models.DecimalField(
+        max_digits=4,
+        decimal_places=3,
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]  # Поле для хранения норматива с проверкой значений от 0.0 до 1.0
+    )
+    base = models.TextField()  # Поле для хранения базы
+
+    def __str__(self):
+        return f'{self.position.position} - {self.rate}'  # Отображение информации о тарифе при вызове str()
