@@ -1,0 +1,21 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Детали должности{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+    
+    <h2>Детали должности</h2>
+    <dl class="row">
+        <dt class="col-sm-3">Должность</dt>
+        <dd class="col-sm-9">{{ object.position }}</dd>
+
+        <dt class="col-sm-3">Комментарии</dt>
+        <dd class="col-sm-9">{{ object.comments }}</dd>
+    </dl>
+    <a href="{% url 'organizer_positions_list' %}" class="btn btn-primary">Назад к должностям</a>
+</div>
+{% endblock %}

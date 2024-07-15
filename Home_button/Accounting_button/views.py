@@ -95,6 +95,11 @@ def owner_or_organizer_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
+
+
+
+
+
 # Список всех должностей
 @method_decorator(owner_or_organizer_required, name='dispatch')
 class PositionDirectoryListView(ListView):
@@ -141,6 +146,9 @@ class PositionDirectoryDeleteView(DeleteView):
     model = PositionDirectory
     template_name = 'Accounting_button/position_confirm_delete.html'
     success_url = reverse_lazy('positions_list')
+
+
+
 
 
 # Список всех тарифов
@@ -246,3 +254,57 @@ class StaffScheduleDeleteView(DeleteView):
     model = StaffSchedule
     template_name = 'Accounting_button/staff_schedule_confirm_delete.html'  # Исправлено
     success_url = reverse_lazy('staff_schedule_list')
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.utils.decorators import method_decorator
+from .models import OrganizerPositionDirectory
+from .decorators import owner_required, owner_or_organizer_required  # Импорт декораторов
+
+# Представление для списка должностей
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class OrganizerPositionDirectoryListView(ListView):
+    model = OrganizerPositionDirectory
+    template_name = 'Accounting_button/organizer_positions/organizer_position_list.html'
+    context_object_name = 'object_list'
+
+# Представление для создания новой должности (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerPositionDirectoryCreateView(CreateView):
+    model = OrganizerPositionDirectory
+    template_name = 'Accounting_button/organizer_positions/organizer_position_form.html'
+    fields = ['position', 'comments']
+    success_url = reverse_lazy('organizer_positions_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Создание должности'
+        return context
+
+# Представление для деталей должности
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class OrganizerPositionDirectoryDetailView(DetailView):
+    model = OrganizerPositionDirectory
+    template_name = 'Accounting_button/organizer_positions/organizer_position_detail.html'
+
+# Представление для редактирования должности (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerPositionDirectoryUpdateView(UpdateView):
+    model = OrganizerPositionDirectory
+    template_name = 'Accounting_button/organizer_positions/organizer_position_form.html'
+    fields = ['position', 'comments']
+    success_url = reverse_lazy('organizer_positions_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Редактирование должности'
+        return context
+
+# Представление для удаления должности (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class OrganizerPositionDirectoryDeleteView(DeleteView):
+    model = OrganizerPositionDirectory
+    template_name = 'Accounting_button/organizer_positions/organizer_position_confirm_delete.html'
+    success_url = reverse_lazy('organizer_positions_list')

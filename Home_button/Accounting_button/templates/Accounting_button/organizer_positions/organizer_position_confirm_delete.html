@@ -1,0 +1,18 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Подтвердить удаление{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+
+    <h2>Вы уверены, что хотите удалить "{{ object }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Подтвердить</button>
+        <a href="{% url 'organizer_positions_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -65,3 +65,8 @@ class StaffScheduleAdmin(SimpleHistoryAdmin):
 # admin.site.register(StaffSchedule)
 
 
+from django.contrib import admin
+from .models import OrganizerPositionDirectory
+
+# Регистрация модели OrganizerPositionDirectory в админке
+admin.site.register(OrganizerPositionDirectory)

@@ -1,0 +1,47 @@
+{% extends 'Accounting_button/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Форма должности{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+
+    <h2>{{ view.title }}</h2>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_position">Должность</label>
+            {{ form.position|add_class:"form-control" }}
+            <div class="invalid-feedback">
+                Пожалуйста, укажите корректную должность.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id_comments">Комментарии</label>
+            {{ form.comments|add_class:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+        <a href="{% url 'organizer_positions_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

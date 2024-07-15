@@ -104,3 +104,14 @@ class StaffSchedule(models.Model):
             models.CheckConstraint(check=models.Q(quantity__gte=1) & models.Q(quantity__lte=1000), name='quantity_range'),
             models.CheckConstraint(check=models.Q(norm_time_per_month__gte=1) & models.Q(norm_time_per_month__lte=44000), name='norm_time_per_month_range'),  # Обновлено максимальное значение
         ]
+
+
+from django.db import models
+
+# Модель для справочника должностей организаторов
+class OrganizerPositionDirectory(models.Model):
+    position = models.CharField(max_length=255)  # Поле для хранения названия должности
+    comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+
+    def __str__(self):
+        return self.position  # Отображение названия должности при вызове str()

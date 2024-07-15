@@ -1,0 +1,32 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Должности организаторов{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+    
+    <h2>Должности</h2>
+    <ul class="list-group">
+        {% for position in object_list %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'organizer_position_detail' position.pk %}">{{ position.position }}</a>
+                    <p>{{ position.comments }}</p>
+                </div>
+                {% if request.user.user_type == 'owner' %}
+                    <span class="btn-group">
+                        <a href="{% url 'organizer_position_edit' position.pk %}" class="btn btn-sm btn-secondary">Редактировать</a>
+                        <a href="{% url 'organizer_position_delete' position.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if request.user.user_type == 'owner' %}
+        <a href="{% url 'organizer_position_create' %}" class="btn btn-primary mt-3">Добавить должность</a>
+    {% endif %}
+</div>
+{% endblock %}

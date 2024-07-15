@@ -9,8 +9,15 @@ from .views import (
     TariffDirectoryListView, TariffDirectoryDetailView, TariffDirectoryCreateView,
     TariffDirectoryUpdateView, TariffDirectoryDeleteView,
     StaffScheduleListView, StaffScheduleDetailView, StaffScheduleCreateView,
-    StaffScheduleUpdateView, StaffScheduleDeleteView
+    StaffScheduleUpdateView, StaffScheduleDeleteView,
+    OrganizerPositionDirectoryListView,
+    OrganizerPositionDirectoryCreateView,
+    OrganizerPositionDirectoryDetailView,
+    OrganizerPositionDirectoryUpdateView,
+    OrganizerPositionDirectoryDeleteView,
+    OwnerDashboardView  
 )
+
 
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),
@@ -39,4 +46,11 @@ urlpatterns = [
     path('dashboard/owner/', OwnerDashboardView.as_view(), name='owner_dashboard'),
     path('dashboard/organizer/', OrganizerDashboardView.as_view(), name='organizer_dashboard'),
     path('dashboard/executor/', ExecutorDashboardView.as_view(), name='executor_dashboard'),
+
+    path('owner/dashboard/', OwnerDashboardView.as_view(), name='owner_dashboard'),  # Маршрут для дашборда собственника
+    path('organizer_positions/', OrganizerPositionDirectoryListView.as_view(), name='organizer_positions_list'),  # URL для списка должностей
+    path('organizer_positions/new/', OrganizerPositionDirectoryCreateView.as_view(), name='organizer_position_create'),  # URL для создания новой должности
+    path('organizer_positions/<int:pk>/', OrganizerPositionDirectoryDetailView.as_view(), name='organizer_position_detail'),  # URL для просмотра деталей должности
+    path('organizer_positions/<int:pk>/edit/', OrganizerPositionDirectoryUpdateView.as_view(), name='organizer_position_edit'),  # URL для редактирования должности
+    path('organizer_positions/<int:pk>/delete/', OrganizerPositionDirectoryDeleteView.as_view(), name='organizer_position_delete'),  # URL для удаления должности
 ]
