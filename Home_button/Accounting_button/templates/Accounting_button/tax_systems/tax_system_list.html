@@ -1,0 +1,32 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Системы налогообложения{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+    
+    <h2>Системы налогообложения</h2>
+    <ul class="list-group">
+        {% for tax_system in tax_systems %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'tax_system_detail' tax_system.pk %}">{{ tax_system.name }}</a>
+                    <p>{{ tax_system.comments }}</p>
+                </div>
+                {% if request.user.user_type == 'owner' %}
+                    <span class="btn-group">
+                        <a href="{% url 'tax_system_edit' tax_system.pk %}" class="btn btn-sm btn-secondary">Редактировать</a>
+                        <a href="{% url 'tax_system_delete' tax_system.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if request.user.user_type == 'owner' %}
+        <a href="{% url 'tax_system_create' %}" class="btn btn-primary mt-3">Добавить систему налогообложения</a>
+    {% endif %}
+</div>
+{% endblock %}

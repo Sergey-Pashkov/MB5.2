@@ -15,7 +15,13 @@ from .views import (
     OrganizerPositionDirectoryDetailView,
     OrganizerPositionDirectoryUpdateView,
     OrganizerPositionDirectoryDeleteView,
-    OwnerDashboardView  
+    OwnerDashboardView,
+    TaxSystemListView,
+    TaxSystemCreateView,
+    TaxSystemDetailView,
+    TaxSystemUpdateView,
+    TaxSystemDeleteView
+  
 )
 from django.urls import path
 from .views import OrganizerTariffListView, OrganizerTariffCreateView, OrganizerTariffDetailView, OrganizerTariffUpdateView, OrganizerTariffDeleteView
@@ -70,4 +76,10 @@ urlpatterns = [
     
     # URL для удаления тарифа
     path('organizer_tariffs/<int:pk>/delete/', OrganizerTariffDeleteView.as_view(), name='organizer_tariff_delete'),
+
+    path('tax_systems/', TaxSystemListView.as_view(), name='tax_systems_list'),
+    path('tax_systems/new/', TaxSystemCreateView.as_view(), name='tax_system_create'),
+    path('tax_systems/<int:pk>/', TaxSystemDetailView.as_view(), name='tax_system_detail'),
+    path('tax_systems/<int:pk>/edit/', TaxSystemUpdateView.as_view(), name='tax_system_edit'),
+    path('tax_systems/<int:pk>/delete/', TaxSystemDeleteView.as_view(), name='tax_system_delete'),
 ]

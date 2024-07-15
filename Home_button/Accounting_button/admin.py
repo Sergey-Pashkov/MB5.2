@@ -75,3 +75,13 @@ admin.site.register(OrganizerPositionDirectory)
 class OrganizerTariffAdmin(admin.ModelAdmin):
     list_display = ('position', 'rate', 'base')
     search_fields = ('position__position',)
+
+
+from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
+from .models import TaxSystem
+
+@admin.register(TaxSystem)
+class TaxSystemAdmin(SimpleHistoryAdmin):
+    list_display = ('name', 'comments')
+    search_fields = ('name',)

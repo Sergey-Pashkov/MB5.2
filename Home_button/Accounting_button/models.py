@@ -131,6 +131,27 @@ class OrganizerTariff(models.Model):
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]  # Поле для хранения норматива с проверкой значений от 0.0 до 1.0
     )
     base = models.TextField()  # Поле для хранения базы
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
+
 
     def __str__(self):
         return f'{self.position.position} - {self.rate}'  # Отображение информации о тарифе при вызове str()
+
+from django.db import models
+from django.conf import settings
+from simple_history.models import HistoricalRecords
+
+class TaxSystem(models.Model):
+    name = models.CharField(max_length=255)  # Поле для хранения названия системы налогообложения
+    comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
+
+    def save(self, *args, **kwargs):
+        if self.author and not self.author_name:
+            self.author_name = self.author.get_full_name() or self.author.email
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name  # Отображение названия системы налогообложения при вызове str()

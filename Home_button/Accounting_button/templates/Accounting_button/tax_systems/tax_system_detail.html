@@ -1,0 +1,21 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Детали системы налогообложения{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+    
+    <h2>Детали системы налогообложения</h2>
+    <dl class="row">
+        <dt class="col-sm-3">Система налогообложения</dt>
+        <dd class="col-sm-9">{{ object.name }}</dd>
+
+        <dt class="col-sm-3">Комментарии</dt>
+        <dd class="col-sm-9">{{ object.comments }}</dd>
+    </dl>
+    <a href="{% url 'tax_systems_list' %}" class="btn btn-primary">Назад к системам налогообложения</a>
+</div>
+{% endblock %}

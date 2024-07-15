@@ -9,20 +9,37 @@ from django.urls import reverse, resolve
 from Accounting_button.models import MyUser
 from Accounting_button.views import LoginView
 
+from django.test import TestCase, Client
+from django.urls import reverse, resolve
+from Accounting_button.views import LoginView
+
+from django.test import TestCase, Client
+from django.urls import reverse, resolve
+from Accounting_button.views import LoginView
+from Accounting_button.models import MyUser as User
+
 
 class LoginViewTestCase(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = MyUser.objects.create_user(email='testuser@example.com', password='password')
+        self.user = User.objects.create_user(
+            email='testuser@example.com',
+            password='password'
+        )
 
     def test_login_url(self):
         url = reverse('login')
         self.assertEqual(resolve(url).func.view_class, LoginView)
 
     def test_login_form_valid(self):
-        response = self.client.post(reverse('login'), {'username': 'testuser@example.com', 'password': 'password'})
-        self.assertRedirects(response, reverse('dashboard_redirect'), status_code=302, target_status_code=200)
+        response = self.client.post(reverse('login'), {
+            'username': self.user.email,
+            'password': 'password'
+        }, follow=True)  # Используйте follow=True, чтобы следовать за перенаправлениями
+        self.assertRedirects(response, reverse('dashboard_redirect'))
+        self.assertEqual(response.status_code, 200)  # Убедитесь, что статус-код 200
+
 
 
 
@@ -95,3 +112,10 @@ class StaffScheduleViewTestCase(TestCase):
         response = self.client.post(reverse('staff_schedule_delete', args=[self.schedule.id]))
         self.assertEqual(response.status_code, 302)  # Redirection status code
         self.assertEqual(StaffSchedule.objects.count(), 0)  # Expecting 0 objects now
+
+from django.contrib.auth.views import LoginView as BaseLoginView
+from django.urls import reverse_lazy
+
+class LoginView(BaseLoginView):
+    template_name = 'Accounting_button/login.html'
+    success_url = reverse_lazy('dashboard_redirect')

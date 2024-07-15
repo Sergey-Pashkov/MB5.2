@@ -363,3 +363,65 @@ class OrganizerTariffDeleteView(DeleteView):
     model = OrganizerTariff
     template_name = 'Accounting_button/organizer_tariffs/organizer_tariff_confirm_delete.html'
     success_url = reverse_lazy('organizer_tariffs_list')
+
+
+
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from .models import TaxSystem
+from .decorators import owner_required, owner_or_organizer_required
+
+# Представление для списка систем налогообложения
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class TaxSystemListView(ListView):
+    model = TaxSystem
+    template_name = 'Accounting_button/tax_systems/tax_system_list.html'
+    context_object_name = 'tax_systems'
+
+# Представление для создания новой системы налогообложения (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class TaxSystemCreateView(CreateView):
+    model = TaxSystem
+    template_name = 'Accounting_button/tax_systems/tax_system_form.html'
+    fields = ['name', 'comments']
+    success_url = reverse_lazy('tax_systems_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Установить автора
+        form.instance.author_name = self.request.user.get_full_name() or self.request.user.username  # Сохранить имя автора
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Создание системы налогообложения'
+        return context
+
+# Представление для деталей системы налогообложения
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class TaxSystemDetailView(DetailView):
+    model = TaxSystem
+    template_name = 'Accounting_button/tax_systems/tax_system_detail.html'
+
+# Представление для редактирования системы налогообложения (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class TaxSystemUpdateView(UpdateView):
+    model = TaxSystem
+    template_name = 'Accounting_button/tax_systems/tax_system_form.html'
+    fields = ['name', 'comments']
+    success_url = reverse_lazy('tax_systems_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = self
+        context['title'] = 'Редактирование системы налогообложения'
+        return context
+
+# Представление для удаления системы налогообложения (только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class TaxSystemDeleteView(DeleteView):
+    model = TaxSystem
+    template_name = 'Accounting_button/tax_systems/tax_system_confirm_delete.html'
+    success_url = reverse_lazy('tax_systems_list')
