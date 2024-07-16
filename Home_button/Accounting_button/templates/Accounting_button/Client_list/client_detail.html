@@ -1,0 +1,62 @@
+{% extends 'Accounting_button/base.html' %}
+{% block title %}Client Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>{{ client.short_name }}</h2>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">System ID</h5>
+            <p class="card-text">{{ client.id }}</p>
+
+            <h5 class="card-title">Full Name</h5>
+            <p class="card-text">{{ client.full_name }}</p>
+
+            <h5 class="card-title">Contract Price</h5>
+            <p class="card-text">{{ client.contract_price }}</p>
+
+            <h5 class="card-title">Contract Number and Date</h5>
+            <p class="card-text">{{ client.contract_number_date }}</p>
+
+            <h5 class="card-title">INN</h5>
+            <p class="card-text">{{ client.inn }}</p>
+
+            <h5 class="card-title">Tax System</h5>
+            <p class="card-text">{{ client.tax_system.name }}</p>
+
+            <h5 class="card-title">Nomenclature Units</h5>
+            <p class="card-text">{{ client.nomenclature_units }}</p>
+
+            <h5 class="card-title">Activity Types</h5>
+            <p class="card-text">{{ client.activity_types }}</p>
+
+            <h5 class="card-title">Contact Name</h5>
+            <p class="card-text">{{ client.contact_name }}</p>
+
+            <h5 class="card-title">Phone Number</h5>
+            <p class="card-text">{{ client.phone_number }}</p>
+
+            <h5 class="card-title">Email</h5>
+            <p class="card-text">{{ client.email }}</p>
+
+            <h5 class="card-title">Postal Address</h5>
+            <p class="card-text">{{ client.postal_address }}</p>
+
+            <h5 class="card-title">Comment</h5>
+            <p class="card-text">{{ client.comment }}</p>
+
+            <h5 class="card-title">Author</h5>
+            <p class="card-text">{{ client.author_name }}</p>
+        </div>
+        <div class="card-footer text-muted">
+            <a href="{% url 'client_edit' client.id %}" class="btn btn-warning">Edit</a>
+            {% if request.user.user_type == 'owner' %}
+            <a href="{% url 'client_delete' client.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+            <a href="{% url 'client_list' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

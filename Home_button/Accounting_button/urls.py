@@ -26,6 +26,7 @@ from .views import (
 from django.urls import path
 from .views import OrganizerTariffListView, OrganizerTariffCreateView, OrganizerTariffDetailView, OrganizerTariffUpdateView, OrganizerTariffDeleteView
 
+from .views import ClientListView, ClientDetailView, ClientCreateView, ClientUpdateView, ClientDeleteView 
 
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),
@@ -82,4 +83,10 @@ urlpatterns = [
     path('tax_systems/<int:pk>/', TaxSystemDetailView.as_view(), name='tax_system_detail'),
     path('tax_systems/<int:pk>/edit/', TaxSystemUpdateView.as_view(), name='tax_system_edit'),
     path('tax_systems/<int:pk>/delete/', TaxSystemDeleteView.as_view(), name='tax_system_delete'),
+
+    path('clients/', ClientListView.as_view(), name='client_list'),
+    path('clients/<int:pk>/', ClientDetailView.as_view(), name='client_detail'),
+    path('clients/new/', ClientCreateView.as_view(), name='client_create'),
+    path('clients/<int:pk>/edit/', ClientUpdateView.as_view(), name='client_edit'),
+    path('clients/<int:pk>/delete/', ClientDeleteView.as_view(), name='client_delete'),
 ]

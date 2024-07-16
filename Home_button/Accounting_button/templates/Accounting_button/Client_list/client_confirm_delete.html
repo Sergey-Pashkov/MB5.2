@@ -1,0 +1,23 @@
+{% extends 'Accounting_button/base.html' %}
+{% block title %}Delete Client{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Confirm Delete</h2>
+        </div>
+        <div class="card-body">
+            <p>Are you sure you want to delete the client <strong>{{ client.short_name }}</strong> with ID <strong>{{ client.id }}</strong>?</p>
+            <p>This action cannot be undone.</p>
+        </div>
+        <div class="card-footer">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url 'client_list' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

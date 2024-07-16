@@ -1,0 +1,37 @@
+{% extends 'Accounting_button/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}{{ view.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ view.title }}</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="text-danger">
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-check mb-3">
+            {% render_field form.hide_in_list class="form-check-input" %}
+            <label class="form-check-label" for="{{ form.hide_in_list.id_for_label }}">
+                {{ form.hide_in_list.label }}
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'client_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

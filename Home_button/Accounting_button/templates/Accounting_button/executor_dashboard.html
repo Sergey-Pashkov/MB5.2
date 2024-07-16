@@ -2,8 +2,12 @@
 {% extends 'Accounting_button/base.html' %}
 
 {% block title %}Executor Dashboard{% endblock %}
+    
 
 {% block content %}
 <h1>Welcome, {{ request.user.first_name }}!</h1>
 <p>This is the executor dashboard.</p>
+
+<a href="{% url 'client_list' %}" class="btn btn-warning mb-3">Список клиентов</a>
+
 {% endblock %}

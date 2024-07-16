@@ -219,6 +219,7 @@ from simple_history.models import HistoricalRecords
 # Получение пользовательской модели
 User = get_user_model()
 
+
 class Client(models.Model):
     short_name = models.CharField(max_length=255, blank=False)  # Поле для краткого наименования
     full_name = models.TextField(blank=True)  # Поле для полного наименования
@@ -226,6 +227,7 @@ class Client(models.Model):
     contract_number_date = models.TextField(blank=True)  # Поле для номера и даты договора
     inn = models.CharField(max_length=12, blank=True)  # Поле для ИНН
     tax_system = models.ForeignKey('TaxSystem', on_delete=models.CASCADE)  # Поле для системы налогообложения, обязательно для заполнения
+    nomenclature_units = models.IntegerField(blank=False, default=0)  # Поле для количества номенклатурных единиц
     activity_types = models.TextField(blank=True)  # Поле для видов деятельности
     contact_name = models.CharField(max_length=255, blank=True)  # Поле для имени контакта
     phone_number = models.CharField(max_length=15, blank=True)  # Поле для номера телефона

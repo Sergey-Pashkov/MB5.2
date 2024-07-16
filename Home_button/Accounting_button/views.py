@@ -425,3 +425,68 @@ class TaxSystemDeleteView(DeleteView):
     model = TaxSystem
     template_name = 'Accounting_button/tax_systems/tax_system_confirm_delete.html'
     success_url = reverse_lazy('tax_systems_list')
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import Client
+from .forms import ClientForm
+from .decorators import owner_required, owner_or_organizer_required, executor_forbidden
+
+# Представление для отображения списка клиентов
+@method_decorator(login_required, name='dispatch')
+class ClientListView(ListView):
+    model = Client  # Указываем модель для списка
+    template_name = 'Accounting_button/Client_list/client_list.html'
+    context_object_name = 'clients'  # Имя переменной в контексте шаблона
+
+    def get_queryset(self):
+        # Организаторы и исполнители видят только тех клиентов, которые не скрыты в списке
+        if self.request.user.user_type in ['organizer', 'executor']:
+            return Client.objects.filter(hide_in_list=False)
+        # Собственники видят всех клиентов
+        return Client.objects.all()
+
+# Представление для отображения деталей клиента
+@method_decorator(login_required, name='dispatch')
+class ClientDetailView(DetailView):
+    model = Client  # Указываем модель для деталей
+    template_name = 'Accounting_button/Client_list/client_detail.html'
+    context_object_name = 'client'  # Имя переменной в контексте шаблона
+
+# Представление для создания нового клиента (доступно для собственников и организаторов)
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class ClientCreateView(CreateView):
+    model = Client  # Указываем модель для создания
+    form_class = ClientForm  # Указываем форму для создания клиента
+    template_name = 'Accounting_button/Client_list/client_form.html'
+    success_url = reverse_lazy('client_list')  # URL для перенаправления после успешного создания
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Устанавливаем автора записи
+        return super().form_valid(form)
+
+# Представление для редактирования клиента (доступно для собственников и организаторов)
+@method_decorator(owner_or_organizer_required, name='dispatch')
+class ClientUpdateView(UpdateView):
+    model = Client  # Указываем модель для редактирования
+    form_class = ClientForm  # Указываем форму для редактирования клиента
+    template_name = 'Accounting_button/Client_list/client_form.html'
+    success_url = reverse_lazy('client_list')  # URL для перенаправления после успешного редактирования
+
+    def get_form(self):
+        form = super().get_form()
+        # Ограничиваем доступ для редактирования поля short_name для организаторов и исполнителей
+        if self.request.user.user_type != 'owner':
+            form.fields['short_name'].disabled = True
+        return form
+
+# Представление для удаления клиента (доступно только для собственников)
+@method_decorator(owner_required, name='dispatch')
+class ClientDeleteView(DeleteView):
+    model = Client  # Указываем модель для удаления
+    template_name = 'Accounting_button/Client_list/client_confirm_delete.html'
+    success_url = reverse_lazy('client_list')  # URL для перенаправления после успешного удаления
