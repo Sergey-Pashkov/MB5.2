@@ -1,7 +1,7 @@
-# Accounting_button/models.py
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from simple_history.models import HistoricalRecords
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -16,7 +16,6 @@ class MyUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
         return self.create_user(email, password, **extra_fields)
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
@@ -32,6 +31,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
 
     objects = MyUserManager()
 
@@ -46,6 +47,16 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+    def save(self, *args, **kwargs):
+        if 'author' in kwargs and kwargs['author']:
+            author = kwargs.pop('author')
+            if not self.author_name:
+                self.author_name = author.get_full_name() or author.email
+        super().save(*args, **kwargs)
+
+
+
 
 
 from django.db import models

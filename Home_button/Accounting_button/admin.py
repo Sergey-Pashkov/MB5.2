@@ -9,23 +9,34 @@ from simple_history.admin import SimpleHistoryAdmin
 
 class MyUserAdmin(UserAdmin):
     model = MyUser
-    list_display = ('email', 'first_name', 'last_name', 'user_type', 'is_staff', 'is_active')
-    list_filter = ('user_type', 'is_staff', 'is_active')
+    list_display = ('email', 'first_name', 'last_name', 'user_type', 'is_staff', 'is_active', 'author_name')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'user_type')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Personal info', {'fields': ('first_name', 'last_name','user_type', 'author_name')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login',)}),  # Убедитесь, что здесь указаны только существующие поля
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'user_type', 'is_staff', 'is_active')}
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'user_type','is_staff', 'is_active', 'author_name')}
         ),
     )
     search_fields = ('email',)
     ordering = ('email',)
+    filter_horizontal = ()
+    
+
+    def save_model(self, request, obj, form, change):
+        obj.save(author=request.user)
 
 admin.site.register(MyUser, MyUserAdmin)
+
+
+
+
+
+
 
 
 from django.contrib import admin
