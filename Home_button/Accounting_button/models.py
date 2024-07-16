@@ -55,33 +55,54 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
                 self.author_name = author.get_full_name() or author.email
         super().save(*args, **kwargs)
 
-
-
-
-
-from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db import models
+from simple_history.models import HistoricalRecords
 
-# Модель справочника должностей исполнителей
+# Получение пользовательской модели
+User = get_user_model()
+
 class PositionDirectory(models.Model):
     position = models.CharField(max_length=255)  # Поле для хранения названия должности
     comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
+
+    def save(self, *args, **kwargs):
+        # Если автор установлен и поле author_name еще не заполнено
+        if self.author and not self.author_name:
+            # Сохранить полное имя автора или его email
+            self.author_name = self.author.get_full_name() or self.author.email
+        # Вызов стандартного метода save для сохранения изменений
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.position  # Отображение названия должности при вызове str()
-
-# Модель справочника тарифов исполнителей
-from django.db import models
-from simple_history.models import HistoricalRecords
+        # Отображение названия должности при вызове str()
+        return self.position
 
 class TariffDirectory(models.Model):
     tariff_name = models.CharField(max_length=255)  # Поле для хранения названия тарифа
     cost_per_minute = models.DecimalField(max_digits=10, decimal_places=2)  # Поле для хранения стоимости минуты рабочего времени
     comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
     history = HistoricalRecords()  # Поле для хранения истории изменений
 
+    def save(self, *args, **kwargs):
+        # Если автор установлен и поле author_name еще не заполнено
+        if self.author and not self.author_name:
+            # Сохранить полное имя автора или его email
+            self.author_name = self.author.get_full_name() or self.author.email
+        # Вызов стандартного метода save для сохранения изменений
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.tariff_name  # Отображение названия тарифа при вызове str()
+        # Отображение названия тарифа при вызове str()
+        return self.tariff_name
+
+
+
 
 
 # Модель штатного расписания
