@@ -436,6 +436,17 @@ from .models import Client
 from .forms import ClientForm
 from .decorators import owner_required, owner_or_organizer_required, executor_forbidden
 
+
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Client
+from .forms import ClientForm
+
+
+
+
 # Представление для отображения списка клиентов
 @method_decorator(login_required, name='dispatch')
 class ClientListView(ListView):
@@ -469,8 +480,8 @@ class ClientCreateView(CreateView):
         form.instance.author = self.request.user  # Устанавливаем автора записи
         return super().form_valid(form)
 
-# Представление для редактирования клиента (доступно для собственников и организаторов)
-@method_decorator(owner_or_organizer_required, name='dispatch')
+# Представление для редактирования клиента (доступно для собственников, организаторов и исполнителей)
+@method_decorator(login_required, name='dispatch')
 class ClientUpdateView(UpdateView):
     model = Client  # Указываем модель для редактирования
     form_class = ClientForm  # Указываем форму для редактирования клиента

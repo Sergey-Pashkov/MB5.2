@@ -34,11 +34,6 @@ admin.site.register(MyUser, MyUserAdmin)
 
 
 
-
-
-
-
-
 from django.contrib import admin
 from .models import PositionDirectory, TariffDirectory, StaffSchedule
 
@@ -99,13 +94,18 @@ class TaxSystemAdmin(SimpleHistoryAdmin):
 
 
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import Client
 
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('short_name', 'full_name', 'contract_price', 'tax_system', 'contact_name', 'phone_number', 'email', 'hide_in_list')
-    list_filter = ('hide_in_list', 'tax_system')
-    search_fields = ('short_name', 'full_name', 'contact_name', 'email')
+# Класс для отображения модели Client в админке с историей изменений
+class ClientAdmin(SimpleHistoryAdmin):
+    list_display = ('id', 'short_name', 'full_name', 'contract_price', 'tax_system', 'author_name', 'hide_in_list')
+    search_fields = ('short_name', 'full_name', 'inn', 'contact_name', 'email')
+    list_filter = ('tax_system', 'hide_in_list')
+    ordering = ('short_name',)
+    fields = ('short_name', 'full_name', 'contract_price', 'contract_number_date', 'inn', 'tax_system', 'nomenclature_units', 'activity_types', 'contact_name', 'phone_number', 'email', 'postal_address', 'comment', 'hide_in_list', 'author_name')
+    readonly_fields = ('author_name',)  # Поля, которые нельзя редактировать
+    list_display_links = ('short_name', 'full_name')  # Ссылки для перехода к редактированию
 
-    # Отображение истории изменений
-    readonly_fields = ('history',)
+# Регистрация модели Client в админке
+admin.site.register(Client, ClientAdmin)
