@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from simple_history.models import HistoricalRecords
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 
 class MyUserManager(BaseUserManager):
@@ -139,20 +141,27 @@ class StaffSchedule(models.Model):
 
 
 from django.db import models
+from django.conf import settings
+from simple_history.models import HistoricalRecords
 
 # Модель для справочника должностей организаторов
 class OrganizerPositionDirectory(models.Model):
     position = models.CharField(max_length=255)  # Поле для хранения названия должности
     comments = models.TextField(blank=True, null=True)  # Поле для хранения комментариев, может быть пустым
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
+
+    def save(self, *args, **kwargs):
+        # Если автор установлен и поле author_name еще не заполнено
+        if self.author and not self.author_name:
+            # Сохранить полное имя автора или его email
+            self.author_name = self.author.get_full_name() or self.author.email
+        # Вызов стандартного метода save
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.position  # Отображение названия должности при вызове str()
 
-from django.test import TestCase
-from Accounting_button.models import OrganizerPositionDirectory
-
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Модель для тарифов организаторов
 class OrganizerTariff(models.Model):
@@ -163,11 +172,25 @@ class OrganizerTariff(models.Model):
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]  # Поле для хранения норматива с проверкой значений от 0.0 до 1.0
     )
     base = models.TextField()  # Поле для хранения базы
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
     history = HistoricalRecords()  # Поле для отслеживания истории изменений
 
+    def save(self, *args, **kwargs):
+        # Если автор установлен и поле author_name еще не заполнено
+        if self.author and not self.author_name:
+            # Сохранить полное имя автора или его email
+            self.author_name = self.author.get_full_name() or self.author.email
+        # Вызов стандартного метода save
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.position.position} - {self.rate}'  # Отображение информации о тарифе при вызове str()
+
+
+
+
+
 
 from django.db import models
 from django.conf import settings
