@@ -155,3 +155,41 @@ class TaxSystem(models.Model):
 
     def __str__(self):
         return self.name  # Отображение названия системы налогообложения при вызове str()
+
+
+from django.contrib.auth import get_user_model
+from django.db import models
+from simple_history.models import HistoricalRecords
+
+# Получение пользовательской модели
+User = get_user_model()
+
+class Client(models.Model):
+    short_name = models.CharField(max_length=255, blank=False)  # Поле для краткого наименования
+    full_name = models.TextField(blank=True)  # Поле для полного наименования
+    contract_price = models.IntegerField(blank=False)  # Поле для цены договора
+    contract_number_date = models.TextField(blank=True)  # Поле для номера и даты договора
+    inn = models.CharField(max_length=12, blank=True)  # Поле для ИНН
+    tax_system = models.ForeignKey('TaxSystem', on_delete=models.CASCADE)  # Поле для системы налогообложения, обязательно для заполнения
+    activity_types = models.TextField(blank=True)  # Поле для видов деятельности
+    contact_name = models.CharField(max_length=255, blank=True)  # Поле для имени контакта
+    phone_number = models.CharField(max_length=15, blank=True)  # Поле для номера телефона
+    email = models.EmailField(blank=True)  # Поле для email
+    postal_address = models.TextField(blank=True)  # Поле для почтового адреса
+    comment = models.TextField(blank=True)  # Поле для комментариев
+    hide_in_list = models.BooleanField(default=False)  # Поле для скрытия в списке (по умолчанию не скрыто)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  # Поле для хранения ссылки на автора
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Поле для хранения имени автора
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
+
+    def save(self, *args, **kwargs):
+        # Если автор установлен и поле author_name еще не заполнено
+        if self.author and not self.author_name:
+            # Сохранить полное имя автора или его email
+            self.author_name = self.author.get_full_name() or self.author.email
+        # Вызов стандартного метода save
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        # Отображение краткого наименования при вызове str()
+        return self.short_name

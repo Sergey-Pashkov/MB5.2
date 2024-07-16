@@ -85,3 +85,16 @@ from .models import TaxSystem
 class TaxSystemAdmin(SimpleHistoryAdmin):
     list_display = ('name', 'comments')
     search_fields = ('name',)
+
+
+from django.contrib import admin
+from .models import Client
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('short_name', 'full_name', 'contract_price', 'tax_system', 'contact_name', 'phone_number', 'email', 'hide_in_list')
+    list_filter = ('hide_in_list', 'tax_system')
+    search_fields = ('short_name', 'full_name', 'contact_name', 'email')
+
+    # Отображение истории изменений
+    readonly_fields = ('history',)
