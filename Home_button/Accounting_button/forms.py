@@ -21,3 +21,19 @@ class ClientForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
             'hide_in_list': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+
+from django import forms
+from .models import WorkTypeGroup
+
+# Форма для модели WorkTypeGroup с Bootstrap стилизацией
+class WorkTypeGroupForm(forms.ModelForm):
+    class Meta:
+        model = WorkTypeGroup
+        fields = ['name', 'comments', 'hide_in_list']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'comments': forms.Textarea(attrs={'class': 'form-control'}),
+            'hide_in_list': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+

@@ -1,0 +1,25 @@
+{% extends 'Accounting_button/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Work Type Group{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Work Type Group</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            {{ form.comments.label_tag }}
+            {{ form.comments }}
+        </div>
+        <div class="form-check mb-3">
+            {{ form.hide_in_list }}
+            {{ form.hide_in_list.label_tag }}
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">{% if form.instance.pk %}Save{% else %}Add{% endif %}</button>
+        <a href="{% url 'worktypegroup_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+{% endblock %}

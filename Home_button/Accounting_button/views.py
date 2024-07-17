@@ -555,3 +555,53 @@ def export_clients(request):
     )
     response['Content-Disposition'] = 'attachment; filename=clients.xlsx'
     return response
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import WorkTypeGroup
+from .forms import WorkTypeGroupForm
+from .decorators import owner_required, owner_or_organizer_required
+
+# Представление для отображения списка всех групп видов работ
+@login_required
+def worktypegroup_list(request):
+    groups = WorkTypeGroup.objects.all()
+    return render(request, 'Accounting_button/WorkTypeGroup/list.html', {'groups': groups})
+
+# Представление для создания новой группы видов работ
+@owner_or_organizer_required
+def worktypegroup_create(request):
+    if request.method == 'POST':
+        form = WorkTypeGroupForm(request.POST)
+        if form.is_valid():
+            worktypegroup = form.save(commit=False)
+            worktypegroup.author = request.user
+            worktypegroup.save()
+            return redirect('worktypegroup_list')
+    else:
+        form = WorkTypeGroupForm()
+    return render(request, 'Accounting_button/WorkTypeGroup/form.html', {'form': form})
+
+# Представление для редактирования существующей группы видов работ
+@owner_or_organizer_required
+def worktypegroup_edit(request, pk):
+    worktypegroup = get_object_or_404(WorkTypeGroup, pk=pk)
+    if request.method == 'POST':
+        form = WorkTypeGroupForm(request.POST, instance=worktypegroup)
+        if form.is_valid():
+            form.save()
+            return redirect('worktypegroup_list')
+    else:
+        form = WorkTypeGroupForm(instance=worktypegroup)
+    return render(request, 'Accounting_button/WorkTypeGroup/form.html', {'form': form})
+
+# Представление для удаления группы видов работ
+@owner_required
+def worktypegroup_delete(request, pk):
+    worktypegroup = get_object_or_404(WorkTypeGroup, pk=pk)
+    if request.method == 'POST':
+        worktypegroup.delete()
+        return redirect('worktypegroup_list')
+    return render(request, 'Accounting_button/WorkTypeGroup/confirm_delete.html', {'worktypegroup': worktypegroup})

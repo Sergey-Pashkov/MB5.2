@@ -31,6 +31,9 @@ from .views import ClientListView, ClientDetailView, ClientCreateView, ClientUpd
 from django.urls import path
 from .views import ClientListView, export_clients
 
+from django.urls import path
+from . import views 
+
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),
     path('positions/new/', PositionDirectoryCreateView.as_view(), name='position_create'),
@@ -97,4 +100,8 @@ urlpatterns = [
     path('clients/', ClientListView.as_view(), name='client_list'),
     path('export_clients/', export_clients, name='export_clients'),
   
+    path('', views.worktypegroup_list, name='worktypegroup_list'),
+    path('create/', views.worktypegroup_create, name='worktypegroup_create'),
+    path('edit/<int:pk>/', views.worktypegroup_edit, name='worktypegroup_edit'),
+    path('delete/<int:pk>/', views.worktypegroup_delete, name='worktypegroup_delete'),
 ]

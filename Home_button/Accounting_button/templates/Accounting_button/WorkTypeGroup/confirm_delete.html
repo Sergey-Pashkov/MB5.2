@@ -1,0 +1,16 @@
+{% extends 'Accounting_button/base.html' %}
+{% block title %}Delete Work Type Group{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Delete Work Type Group</h1>
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete "{{ worktypegroup.name }}"?
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'worktypegroup_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -6,22 +6,30 @@
 <div class="container mt-4">
     <h1>Welcome, {{ request.user.first_name }}!</h1>
     <p>This is the owner dashboard.</p>
+    
     <!-- Кнопка для перехода на справочник должностей -->
     <a href="{% url 'positions_list' %}" class="btn btn-warning mb-3">View Positions Directory</a>
+    
     <!-- Кнопка для перехода на справочник тарифов -->
     <a href="{% url 'tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
+    
     <!-- Кнопка для перехода на страницу штатного расписания -->
     <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning mb-3">View Staff Schedule</a>
+    
     <!-- Кнопка для перехода на справочник должностей организаторов-->
     <a href="{% url 'organizer_positions_list' %}" class="btn btn-warning mb-3">Справочник должностей организаторов</a>
+    
     <!-- Кнопка для перехода на справочник тарифов -->
     <a href="{% url 'organizer_tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
-     <!-- Кнопка для перехода на справочник систем налогообложения -->
+    
+    <!-- Кнопка для перехода на справочник систем налогообложения -->
     <a href="{% url 'tax_systems_list' %}" class="btn btn-warning mb-3">Системы налогообложения</a>
     
+    <!-- Кнопка для перехода на список клиентов -->
     <a href="{% url 'client_list' %}" class="btn btn-warning mb-3">Список клиентов</a>
-
+    
+    <!-- кнопка для перехода на справочник групп видов работ -->
+    <a href="{% url 'worktypegroup_list' %}" class="btn btn-warning mb-3">Группы видов работ</a>
 </div>
 {% endblock %}
-
 
