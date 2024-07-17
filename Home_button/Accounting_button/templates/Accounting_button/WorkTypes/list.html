@@ -8,7 +8,7 @@
         Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
     </div>
     <h1>Список видов работ</h1>
-    {% if request.user.user_type == 'owner' %}
+    {% if request.user.user_type in 'owner organizer' %}
     <a href="{% url 'worktype_create' %}" class="btn btn-success mb-3">Добавить вид работы</a>
     {% endif %}
     <table class="table table-striped table-hover mt-3">
@@ -33,17 +33,16 @@
                 <td>{{ worktype.tariff_name }}</td>
                 <td>{{ worktype.tariff_cost }}</td>
                 <td>
+                    {% if request.user.user_type in 'owner organizer' %}
                     <a href="{% url 'worktype_edit' worktype.pk %}" class="btn btn-warning btn-sm">Edit</a>
                     {% if request.user.user_type == 'owner' %}
                     <a href="{% url 'worktype_delete' worktype.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    {% endif %}
                     {% endif %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% if request.user.user_type == 'owner' or request.user.user_type == 'organizer' %}
-    <a href="{% url 'worktype_create' %}" class="btn btn-success mt-3">Add Work Type</a>
-    {% endif %}
 </div>
 {% endblock %}

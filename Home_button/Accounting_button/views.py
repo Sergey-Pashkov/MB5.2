@@ -606,11 +606,10 @@ def worktypegroup_delete(request, pk):
     return render(request, 'Accounting_button/WorkTypeGroup/confirm_delete.html', {'worktypegroup': worktypegroup})
 
 
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import WorkType
 from .forms import WorkTypeForm
-from .decorators import unique_owner_required, unique_organizer_required, unique_executor_required
+from .decorators import unique_owner_required, owner_or_organizer_required, unique_executor_required
 
 @login_required
 def worktype_list(request):
@@ -624,7 +623,7 @@ def worktype_list(request):
         worktypes = WorkType.objects.all()
     return render(request, 'Accounting_button/WorkTypes/list.html', {'worktypes': worktypes})
 
-@unique_organizer_required
+@owner_or_organizer_required
 def worktype_create(request):
     """
     Представление для создания нового вида работ.
@@ -641,7 +640,7 @@ def worktype_create(request):
         form = WorkTypeForm()
     return render(request, 'Accounting_button/WorkTypes/form.html', {'form': form})
 
-@unique_organizer_required
+@owner_or_organizer_required
 def worktype_edit(request, pk):
     """
     Представление для редактирования существующего вида работ.
