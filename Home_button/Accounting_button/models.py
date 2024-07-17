@@ -250,3 +250,27 @@ class Client(models.Model):
     def __str__(self):
         # Отображение краткого наименования при вызове str()
         return self.short_name
+
+
+
+
+
+from django.db import models
+from simple_history.models import HistoricalRecords
+from django.contrib.auth import get_user_model
+
+class WorkTypeGroup(models.Model):
+    name = models.CharField(max_length=255, blank=False)  # Группа видов работ, обязательно для заполнения
+    comments = models.TextField(blank=True)  # Комментарии
+    hide_in_list = models.BooleanField(default=False)  # Скрывать в списке, по умолчанию нет галки
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)  # Автор, заполняется автоматически
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Имя автора
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
+
+    def save(self, *args, **kwargs):
+        if self.author and not self.author_name:
+            self.author_name = self.author.get_full_name() or self.author.email
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name  # Отображение названия группы видов работ при вызове str()

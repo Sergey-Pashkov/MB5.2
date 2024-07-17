@@ -93,19 +93,22 @@ class TaxSystemAdmin(SimpleHistoryAdmin):
     search_fields = ('name',)
 
 
+
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Client
+from .models import WorkTypeGroup
 
-# Класс для отображения модели Client в админке с историей изменений
-class ClientAdmin(SimpleHistoryAdmin):
-    list_display = ('id', 'short_name', 'full_name', 'contract_price', 'tax_system', 'author_name', 'hide_in_list')
-    search_fields = ('short_name', 'full_name', 'inn', 'contact_name', 'email')
-    list_filter = ('tax_system', 'hide_in_list')
-    ordering = ('short_name',)
-    fields = ('short_name', 'full_name', 'contract_price', 'contract_number_date', 'inn', 'tax_system', 'nomenclature_units', 'activity_types', 'contact_name', 'phone_number', 'email', 'postal_address', 'comment', 'hide_in_list', 'author_name')
-    readonly_fields = ('author_name',)  # Поля, которые нельзя редактировать
-    list_display_links = ('short_name', 'full_name')  # Ссылки для перехода к редактированию
+# Регистрация модели WorkTypeGroup с использованием SimpleHistoryAdmin для отслеживания истории изменений
+@admin.register(WorkTypeGroup)
+class WorkTypeGroupAdmin(SimpleHistoryAdmin):
+    list_display = ('name', 'author', 'hide_in_list')  # Поля, отображаемые в списке
+    search_fields = ('name', 'author__email')  # Поля, по которым можно искать
+    list_filter = ('hide_in_list',)  # Поля для фильтрации
 
-# Регистрация модели Client в админке
-admin.site.register(Client, ClientAdmin)
+    # Автоматическое заполнение поля author_name на основе автора
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        if not obj.author_name:
+            obj.author_name = obj.author.get_full_name() or obj.author.email
+        super().save_model(request, obj, form, change)
