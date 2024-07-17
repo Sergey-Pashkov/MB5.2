@@ -274,3 +274,34 @@ class WorkTypeGroup(models.Model):
 
     def __str__(self):
         return self.name  # Отображение названия группы видов работ при вызове str()
+
+
+from django.db import models
+from django.contrib.auth import get_user_model
+from simple_history.models import HistoricalRecords
+
+class WorkType(models.Model):
+    name = models.CharField(max_length=255, blank=False)  # Наименование
+    time_norm = models.IntegerField(blank=False)  # Норма времени (мин)
+    work_type_group = models.ForeignKey('WorkTypeGroup', on_delete=models.CASCADE)  # Группа видов работ
+    tariff_name = models.ForeignKey('TariffDirectory', on_delete=models.CASCADE, related_name='worktypes')  # Имя тарифа
+    tariff_cost = models.DecimalField(max_digits=10, decimal_places=2, editable=False)  # Тариф (руб.)
+    job_description = models.TextField(blank=True)  # Описание работы
+    hide_in_list = models.BooleanField(default=False)  # Скрывать в списке
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)  # Автор, заполняется автоматически
+    author_name = models.CharField(max_length=255, blank=True, null=True)  # Имя автора
+    history = HistoricalRecords()  # Поле для отслеживания истории изменений
+
+    def save(self, *args, **kwargs):
+        # Заполнение поля author_name
+        if self.author and not self.author_name:
+            self.author_name = self.author.get_full_name() or self.author.email
+
+        # Автоматическое заполнение поля tariff_cost
+        if self.tariff_name:
+            self.tariff_cost = self.tariff_name.cost_per_minute
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name  # Отображение названия группы видов работ при вызове str()
