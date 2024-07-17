@@ -38,5 +38,6 @@
     {% if request.user.user_type == 'owner' or request.user.user_type == 'organizer' %}
     <a href="{% url 'client_create' %}" class="btn btn-success mt-3">Add Client</a>
     {% endif %}
+    <a href="{% url 'export_clients' %}" class="btn btn-primary mt-3">Export to Excel</a>
 </div>
 {% endblock %}

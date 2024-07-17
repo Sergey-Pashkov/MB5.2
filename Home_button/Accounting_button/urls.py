@@ -28,6 +28,9 @@ from .views import OrganizerTariffListView, OrganizerTariffCreateView, Organizer
 
 from .views import ClientListView, ClientDetailView, ClientCreateView, ClientUpdateView, ClientDeleteView 
 
+from django.urls import path
+from .views import ClientListView, export_clients
+
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),
     path('positions/new/', PositionDirectoryCreateView.as_view(), name='position_create'),
@@ -89,4 +92,9 @@ urlpatterns = [
     path('clients/new/', ClientCreateView.as_view(), name='client_create'),
     path('clients/<int:pk>/edit/', ClientUpdateView.as_view(), name='client_edit'),
     path('clients/<int:pk>/delete/', ClientDeleteView.as_view(), name='client_delete'),
+
+  # выгрузка списка клиентов в эксель
+    path('clients/', ClientListView.as_view(), name='client_list'),
+    path('export_clients/', export_clients, name='export_clients'),
+  
 ]

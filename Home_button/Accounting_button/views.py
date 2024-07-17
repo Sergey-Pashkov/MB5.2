@@ -501,3 +501,57 @@ class ClientDeleteView(DeleteView):
     model = Client  # Указываем модель для удаления
     template_name = 'Accounting_button/Client_list/client_confirm_delete.html'
     success_url = reverse_lazy('client_list')  # URL для перенаправления после успешного удаления
+
+
+from django.http import HttpResponse
+import openpyxl
+from io import BytesIO
+from .models import Client
+
+def export_clients(request):
+    # Создаем новый workbook и активный лист
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = 'Clients'
+
+    # Заголовки колонок
+    columns = [
+        'ID', 'Short Name', 'Full Name', 'Contract Price', 
+        'Contract Number and Date', 'INN', 'Tax System', 
+        'Nomenclature Units', 'Activity Types', 'Contact Name', 
+        'Phone Number', 'Email', 'Postal Address', 'Comment', 
+        'Hide In List', 'Author', 'Author Name'
+    ]
+    row_num = 1
+
+    # Заполняем заголовки
+    for col_num, column_title in enumerate(columns, 1):
+        cell = sheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Заполняем данные клиентов
+    for client in Client.objects.all():
+        row_num += 1
+        row = [
+            client.id, client.short_name, client.full_name, client.contract_price, 
+            client.contract_number_date, client.inn, client.tax_system.name, 
+            client.nomenclature_units, client.activity_types, client.contact_name, 
+            client.phone_number, client.email, client.postal_address, client.comment, 
+            client.hide_in_list, client.author.get_full_name() if client.author else '', client.author_name
+        ]
+        for col_num, cell_value in enumerate(row, 1):
+            cell = sheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    # Сохраняем workbook в байтовый объект
+    buffer = BytesIO()
+    workbook.save(buffer)
+    buffer.seek(0)
+
+    # Возвращаем ответ с файлом Excel
+    response = HttpResponse(
+        buffer,
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=clients.xlsx'
+    return response
