@@ -22,16 +22,18 @@
                 <td>{{ group.comments }}</td>
                 <td>{{ group.hide_in_list }}</td>
                 <td>
-                    <a href="{% url 'worktypegroup_edit' group.id %}" class="btn btn-warning btn-sm">Edit</a>
-                    {% if request.user.user_type == 'owner' %}
-                    <a href="{% url 'worktypegroup_delete' group.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    {% if request.user.user_type != 'executor' %}
+                        <a href="{% url 'worktypegroup_edit' group.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        {% if request.user.user_type == 'owner' %}
+                        <a href="{% url 'worktypegroup_delete' group.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% if request.user.user_type == 'owner' or request.user.user_type == 'organizer' %}
+    {% if request.user.user_type != 'executor' %}
     <a href="{% url 'worktypegroup_create' %}" class="btn btn-success mt-3">Add Work Type Group</a>
     {% endif %}
 </div>

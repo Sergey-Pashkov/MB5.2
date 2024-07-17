@@ -28,3 +28,11 @@ def owner_or_organizer_required(view_func):
             return redirect('forbidden')  # Перенаправление на страницу с сообщением о недостаточности прав
         return view_func(request, *args, **kwargs)
     return _wrapped_view
+
+# Декоратор для запрета доступа исполнителям на редактирование и удаление
+def restrict_executor_edit(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.user_type == 'executor' and request.path != '/worktypegroup/':
+            return redirect('forbidden')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view 
