@@ -1,0 +1,37 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Форма вида работы{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{% if form.instance.pk %}Редактировать{% else %}Добавить{% endif %} вид работы</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.instance.pk %}
+        <div class="form-group">
+            <label>ID:</label>
+            <input type="text" class="form-control" value="{{ form.instance.pk }}" readonly>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            {{ form.name.label_tag }} {{ form.name }}
+        </div>
+        <div class="form-group">
+            {{ form.time_norm.label_tag }} {{ form.time_norm }}
+        </div>
+        <div class="form-group">
+            {{ form.work_type_group.label_tag }} {{ form.work_type_group }}
+        </div>
+        <div class="form-group">
+            {{ form.tariff_name.label_tag }} {{ form.tariff_name }}
+        </div>
+        <div class="form-group">
+            {{ form.job_description.label_tag }} {{ form.job_description }}
+        </div>
+        <div class="form-check">
+            {{ form.hide_in_list }} {{ form.hide_in_list.label_tag }}
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

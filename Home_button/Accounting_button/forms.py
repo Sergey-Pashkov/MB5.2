@@ -37,3 +37,20 @@ class WorkTypeGroupForm(forms.ModelForm):
             'hide_in_list': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
+
+
+from django import forms
+from .models import WorkType
+
+class WorkTypeForm(forms.ModelForm):
+    class Meta:
+        model = WorkType
+        fields = ['name', 'time_norm', 'work_type_group', 'tariff_name', 'job_description', 'hide_in_list']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),  # Поле ввода для наименования
+            'time_norm': forms.NumberInput(attrs={'class': 'form-control'}),  # Поле ввода для нормы времени
+            'work_type_group': forms.Select(attrs={'class': 'form-control'}),  # Выпадающий список для группы видов работ
+            'tariff_name': forms.Select(attrs={'class': 'form-control'}),  # Выпадающий список для имени тарифа
+            'job_description': forms.Textarea(attrs={'class': 'form-control'}),  # Текстовое поле для описания работы
+            'hide_in_list': forms.CheckboxInput(attrs={'class': 'form-check-input'}),  # Чекбокс для скрытия в списке
+        }

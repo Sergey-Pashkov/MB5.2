@@ -104,4 +104,16 @@ urlpatterns = [
     path('create/', views.worktypegroup_create, name='worktypegroup_create'),
     path('edit/<int:pk>/', views.worktypegroup_edit, name='worktypegroup_edit'),
     path('delete/<int:pk>/', views.worktypegroup_delete, name='worktypegroup_delete'),
+
+    path('worktypes/', views.worktype_list, name='worktype_list'),  # URL для отображения списка видов работ
+    path('worktypes/create/', views.worktype_create, name='worktype_create'),  # URL для создания нового вида работ
+    path('worktypes/edit/<int:pk>/', views.worktype_edit, name='worktype_edit'),  # URL для редактирования вида работ
+    path('worktypes/delete/<int:pk>/', views.worktype_delete, name='worktype_delete'),  # URL для удаления вида работ
+
+
+    path('worktypes/', views.worktype_list, name='worktype_list'),  # URL для отображения списка видов работ
+    path('worktypes/create/', views.worktype_create, name='worktype_create'),  # URL для создания нового вида работ
+    path('worktypes/edit/<int:pk>/', views.worktype_edit, name='worktype_edit'),  # URL для редактирования вида работ
+    path('worktypes/delete/<int:pk>/', views.worktype_delete, name='worktype_delete'),  # URL для удаления вида работ
+ 
 ]

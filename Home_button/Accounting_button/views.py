@@ -604,3 +604,68 @@ def worktypegroup_delete(request, pk):
         worktypegroup.delete()
         return redirect('worktypegroup_list')
     return render(request, 'Accounting_button/WorkTypeGroup/confirm_delete.html', {'worktypegroup': worktypegroup})
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import WorkType
+from .forms import WorkTypeForm
+from .decorators import unique_owner_required, unique_organizer_required, unique_executor_required
+
+@login_required
+def worktype_list(request):
+    """
+    Представление для отображения списка всех видов работ.
+    Пользователь с типом 'executor' видит только те записи, у которых нет галки в поле hide_in_list.
+    """
+    if request.user.user_type == 'executor':
+        worktypes = WorkType.objects.filter(hide_in_list=False)
+    else:
+        worktypes = WorkType.objects.all()
+    return render(request, 'Accounting_button/WorkTypes/list.html', {'worktypes': worktypes})
+
+@unique_organizer_required
+def worktype_create(request):
+    """
+    Представление для создания нового вида работ.
+    Доступно для пользователей с типом 'owner' и 'organizer'.
+    """
+    if request.method == 'POST':
+        form = WorkTypeForm(request.POST)
+        if form.is_valid():
+            worktype = form.save(commit=False)
+            worktype.author = request.user
+            worktype.save()
+            return redirect('worktype_list')
+    else:
+        form = WorkTypeForm()
+    return render(request, 'Accounting_button/WorkTypes/form.html', {'form': form})
+
+@unique_organizer_required
+def worktype_edit(request, pk):
+    """
+    Представление для редактирования существующего вида работ.
+    Доступно для пользователей с типом 'owner' и 'organizer'.
+    """
+    worktype = get_object_or_404(WorkType, pk=pk)
+    if request.method == 'POST':
+        form = WorkTypeForm(request.POST, instance=worktype)
+        if form.is_valid():
+            form.save()
+            return redirect('worktype_list')
+    else:
+        form = WorkTypeForm(instance=worktype)
+    return render(request, 'Accounting_button/WorkTypes/form.html', {'form': form})
+
+@unique_owner_required
+def worktype_delete(request, pk):
+    """
+    Представление для удаления вида работ.
+    Доступно только для пользователей с типом 'owner'.
+    Отображает страницу подтверждения перед удалением.
+    """
+    worktype = get_object_or_404(WorkType, pk=pk)
+    if request.method == 'POST':
+        worktype.delete()
+        return redirect('worktype_list')
+    return render(request, 'Accounting_button/WorkTypes/confirm_delete.html', {'worktype': worktype})

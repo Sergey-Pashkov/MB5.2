@@ -36,3 +36,34 @@ def restrict_executor_edit(view_func):
             return redirect('forbidden')
         return view_func(request, *args, **kwargs)
     return _wrapped_view 
+
+
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+# Декоратор для проверки, что пользователь является собственником
+def unique_owner_required(view_func):
+    @login_required
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.user_type != 'owner':
+            return redirect('forbidden')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+# Декоратор для проверки, что пользователь является организатором
+def unique_organizer_required(view_func):
+    @login_required
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.user_type not in ['owner', 'organizer']:
+            return redirect('forbidden')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+# Декоратор для проверки, что пользователь является исполнителем
+def unique_executor_required(view_func):
+    @login_required
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.user_type != 'executor':
+            return redirect('forbidden')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
