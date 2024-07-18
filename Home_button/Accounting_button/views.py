@@ -740,7 +740,7 @@ def export_worktypes_to_excel(request):
 
 
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import WorkType
 from simple_history.utils import update_change_reason
 from datetime import datetime, timedelta
@@ -748,11 +748,19 @@ from datetime import datetime, timedelta
 def worktype_history(request):
     date_30_days_ago = datetime.now() - timedelta(days=30)
     history = WorkType.history.filter(history_date__gte=date_30_days_ago).order_by('-history_date')
-    return render(request, 'Accounting_button/WorkTypes/worktype_history.html', {'history': history})
+    changes = []
+
+    for record in history:
+        next_record = record.next_record
+        if next_record:
+            delta = record.diff_against(next_record)
+            changes.append((record, delta))
+
+    return render(request, 'Accounting_button/WorkTypes/worktype_history.html', {'changes': changes})
 
 def worktype_revert(request, pk, history_id):
     worktype = get_object_or_404(WorkType, pk=pk)
-    historical_instance = get_object_or_404(worktype.history.model, id=history_id)
+    historical_instance = get_object_or_404(worktype.history.model, history_id=history_id)
     historical_instance.instance.save()
     update_change_reason(historical_instance.instance, 'Reverted to a previous version')
     return redirect('worktype_history')

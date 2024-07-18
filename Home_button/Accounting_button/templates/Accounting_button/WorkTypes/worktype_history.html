@@ -12,20 +12,24 @@
                 <th>Дата изменения</th>
                 <th>Пользователь</th>
                 <th>Причина</th>
-                <th>Наименование работы</th>
+                <th>Изменения</th>
                 <th>Действия</th>
             </tr>
         </thead>
         <tbody>
-            {% for change in history %}
+            {% for record, delta in changes %}
             <tr>
-                <td>{{ change.id }}</td>
-                <td>{{ change.history_date }}</td>
-                <td>{{ change.history_user }}</td>
-                <td>{{ change.history_change_reason }}</td>
-                <td>{{ change.instance.name }}</td>
+                <td>{{ record.id }}</td>
+                <td>{{ record.history_date }}</td>
+                <td>{{ record.history_user }}</td>
+                <td>{{ record.history_change_reason }}</td>
                 <td>
-                    <a href="{% url 'worktype_revert' change.instance.pk change.id %}" class="btn btn-warning btn-sm">Откатить</a>
+                    {% for change in delta.changes %}
+                        <strong>{{ change.field }}</strong>: {{ change.old }} &rarr; {{ change.new }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'worktype_revert' record.instance.pk record.history_id %}" class="btn btn-warning btn-sm">Откатить</a>
                 </td>
             </tr>
             {% endfor %}

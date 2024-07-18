@@ -114,14 +114,16 @@ class WorkTypeGroupAdmin(SimpleHistoryAdmin):
         super().save_model(request, obj, form, change)
 
 
-
 from django.contrib import admin
 from .models import WorkType
 
 @admin.register(WorkType)
 class WorkTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'time_norm', 'work_type_group', 'tariff_name', 'tariff_cost', 'author', 'hide_in_list')
+    list_display = ('id', 'name', 'time_norm', 'work_type_group', 'tariff_name', 'tariff_cost', 'author', 'hide_in_list')
+    list_display_links = ('id', 'name')  # Поля, которые будут гиперссылками на детали объекта
     search_fields = ('name', 'author_name', 'work_type_group__name', 'tariff_name__tariff_name')
+
+
 
 
 
