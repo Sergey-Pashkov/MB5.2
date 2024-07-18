@@ -1,0 +1,17 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}Просмотр вида работы{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
+    </div>
+    <h1>Просмотр вида работы</h1>
+    <form>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'worktype_list' %}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}

@@ -668,3 +668,57 @@ def worktype_delete(request, pk):
         worktype.delete()
         return redirect('worktype_list')
     return render(request, 'Accounting_button/WorkTypes/confirm_delete.html', {'worktype': worktype})
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import WorkType
+from .forms import WorkTypeForm
+from .decorators import unique_executor_required
+
+@unique_executor_required
+def worktype_view(request, pk):
+    worktype = get_object_or_404(WorkType, pk=pk)
+    form = WorkTypeForm(instance=worktype)
+    for field in form.fields.values():
+        field.widget.attrs['readonly'] = True
+        field.widget.attrs['disabled'] = True
+    return render(request, 'Accounting_button/WorkTypes/worktype_view.html', {'form': form})
+
+
+import openpyxl
+from django.http import HttpResponse
+from .models import WorkType
+
+def export_worktypes_to_excel(request):
+    worktypes = WorkType.objects.all()
+
+    # Создание нового файла Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = 'Work Types'
+
+    # Добавление заголовков столбцов
+    columns = ['ID', 'Наименование', 'Норма времени (мин)', 'Группа', 'Имя тарифа', 'Тариф', 'Описание работы', 'Скрывать в списке', 'Имя автора']
+    ws.append(columns)
+
+    # Заполнение файла данными
+    for worktype in worktypes:
+        ws.append([
+            worktype.id, 
+            worktype.name, 
+            worktype.time_norm, 
+            worktype.work_type_group.name if worktype.work_type_group else '',  # Проверка на наличие группы
+            worktype.tariff_name.tariff_name if worktype.tariff_name else '',  # Использование правильного поля тарифа
+            worktype.tariff_cost,
+            worktype.job_description,
+            'Да' if worktype.hide_in_list else 'Нет',
+            worktype.author_name if worktype.author_name else ''
+        ])
+
+    # Создание HTTP-ответа с файлом
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=worktypes.xlsx'
+    wb.save(response)
+
+    return response

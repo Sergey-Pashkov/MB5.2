@@ -115,5 +115,9 @@ urlpatterns = [
     path('worktypes/create/', views.worktype_create, name='worktype_create'),  # URL для создания нового вида работ
     path('worktypes/edit/<int:pk>/', views.worktype_edit, name='worktype_edit'),  # URL для редактирования вида работ
     path('worktypes/delete/<int:pk>/', views.worktype_delete, name='worktype_delete'),  # URL для удаления вида работ
- 
+    path('worktypes/view/<int:pk>/', views.worktype_view, name='worktype_view'),  # URL для просмотра вида работ
+
+   path('worktypes/export/', views.export_worktypes_to_excel, name='worktype_export'),
+
+
 ]
