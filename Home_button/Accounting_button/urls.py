@@ -105,10 +105,6 @@ urlpatterns = [
     path('edit/<int:pk>/', views.worktypegroup_edit, name='worktypegroup_edit'),
     path('delete/<int:pk>/', views.worktypegroup_delete, name='worktypegroup_delete'),
 
-    path('worktypes/', views.worktype_list, name='worktype_list'),  # URL для отображения списка видов работ
-    path('worktypes/create/', views.worktype_create, name='worktype_create'),  # URL для создания нового вида работ
-    path('worktypes/edit/<int:pk>/', views.worktype_edit, name='worktype_edit'),  # URL для редактирования вида работ
-    path('worktypes/delete/<int:pk>/', views.worktype_delete, name='worktype_delete'),  # URL для удаления вида работ
 
 
     path('worktypes/', views.worktype_list, name='worktype_list'),  # URL для отображения списка видов работ
@@ -116,8 +112,13 @@ urlpatterns = [
     path('worktypes/edit/<int:pk>/', views.worktype_edit, name='worktype_edit'),  # URL для редактирования вида работ
     path('worktypes/delete/<int:pk>/', views.worktype_delete, name='worktype_delete'),  # URL для удаления вида работ
     path('worktypes/view/<int:pk>/', views.worktype_view, name='worktype_view'),  # URL для просмотра вида работ
-
-   path('worktypes/export/', views.export_worktypes_to_excel, name='worktype_export'),
-
-
+    path('worktypes/export/', views.export_worktypes_to_excel, name='worktype_export'),  # URL для экспорта данных в Excel
+    path('worktypes/history/', views.worktype_history, name='worktype_history'),  # URL для просмотра истории изменений за последние 30 дней
+    path('worktypes/revert/<int:pk>/<int:history_id>/', views.worktype_revert, name='worktype_revert'),  # URL для отката к предыдущей версии
 ]
+
+
+
+
+
+

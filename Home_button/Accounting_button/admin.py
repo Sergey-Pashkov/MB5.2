@@ -122,3 +122,26 @@ from .models import WorkType
 class WorkTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'time_norm', 'work_type_group', 'tariff_name', 'tariff_cost', 'author', 'hide_in_list')
     search_fields = ('name', 'author_name', 'work_type_group__name', 'tariff_name__tariff_name')
+
+
+
+from django.contrib import admin
+from .models import Client
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('short_name', 'full_name', 'contract_price', 'tax_system', 'contact_name', 'phone_number', 'email', 'hide_in_list', 'author_name')
+    list_filter = ('tax_system', 'hide_in_list')
+    search_fields = ('short_name', 'full_name', 'contact_name', 'phone_number', 'email', 'inn')
+    readonly_fields = ('author_name',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.user_type in ['organizer', 'executor']:
+            return qs.filter(hide_in_list=False)
+        return qs
+
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        obj.save()

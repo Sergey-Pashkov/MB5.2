@@ -30,6 +30,14 @@ class DashboardRedirectView(View):
             return redirect('executor_dashboard')
         return redirect('login')
 
+
+
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+from .models import WorkType
+
 @method_decorator(login_required, name='dispatch')
 class OwnerDashboardView(TemplateView):
     template_name = 'Accounting_button/owner_dashboard.html'
@@ -38,6 +46,13 @@ class OwnerDashboardView(TemplateView):
         if request.user.user_type != 'owner':
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['worktypes'] = WorkType.objects.all()
+        return context
+
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizerDashboardView(TemplateView):
@@ -722,3 +737,22 @@ def export_worktypes_to_excel(request):
     wb.save(response)
 
     return response
+
+
+
+from django.shortcuts import render, redirect
+from .models import WorkType
+from simple_history.utils import update_change_reason
+from datetime import datetime, timedelta
+
+def worktype_history(request):
+    date_30_days_ago = datetime.now() - timedelta(days=30)
+    history = WorkType.history.filter(history_date__gte=date_30_days_ago).order_by('-history_date')
+    return render(request, 'Accounting_button/WorkTypes/worktype_history.html', {'history': history})
+
+def worktype_revert(request, pk, history_id):
+    worktype = get_object_or_404(WorkType, pk=pk)
+    historical_instance = get_object_or_404(worktype.history.model, id=history_id)
+    historical_instance.instance.save()
+    update_change_reason(historical_instance.instance, 'Reverted to a previous version')
+    return redirect('worktype_history')
