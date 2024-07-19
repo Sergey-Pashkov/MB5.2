@@ -357,7 +357,7 @@ class StandardOperationsJournal(models.Model):
         self.time_norm = self.work_type.time_norm
         self.tariff = self.work_type.tariff_cost
         self.total_time = self.time_norm * self.quantity
-        self.total_cost = self.quantity * self.tariff
+        self.total_cost = self.tariff * self.total_time 
         self.clean()
         super().save(*args, **kwargs)
 

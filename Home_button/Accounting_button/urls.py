@@ -16,7 +16,7 @@ from .views import (  # Импорт всех нужных представле�
     TaxSystemListView, TaxSystemCreateView, TaxSystemDetailView, TaxSystemUpdateView, TaxSystemDeleteView,
     worktypegroup_list, worktypegroup_create, worktypegroup_edit, worktypegroup_delete,
     worktype_list, worktype_create, worktype_edit, worktype_delete, worktype_view, export_worktypes_to_excel, worktype_history, worktype_revert,
-    StandardOperationsJournalListView, StandardOperationsJournalCreateView, StandardOperationsJournalUpdateView, StandardOperationsJournalDeleteView,
+    StandardOperationsJournalListView, StandardOperationsJournalCreateView, StandardOperationsJournalUpdateView, StandardOperationsJournalDeleteView, StandardOperationsJournalDetailView,
 )
 
 urlpatterns = [
@@ -89,5 +89,7 @@ urlpatterns = [
     path('journals/create/', StandardOperationsJournalCreateView.as_view(), name='journal_create'),  # Создание новой стандартной операции
     path('journals/update/<int:pk>/', StandardOperationsJournalUpdateView.as_view(), name='journal_update'),  # Редактирование стандартной операции
     path('journals/delete/<int:pk>/', StandardOperationsJournalDeleteView.as_view(), name='journal_delete'),  # Удаление стандартной операции
+    path('journals/<int:pk>/', StandardOperationsJournalDetailView.as_view(), name='journal_detail'),  # Добавьте этот маршрут
 ]
+
 
