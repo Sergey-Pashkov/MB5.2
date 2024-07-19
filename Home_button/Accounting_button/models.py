@@ -311,10 +311,21 @@ class WorkType(models.Model):
 
 
 
+
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.utils import timezone
 from simple_history.models import HistoricalRecords
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
+def validate_quantity(value):
+    if value == 0:
+        raise ValidationError(
+            _('%(value)s is not an allowed value. Quantity cannot be zero.'),
+            params={'value': value},
+        )
 
 class StandardOperationsJournal(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
@@ -326,12 +337,16 @@ class StandardOperationsJournal(models.Model):
     work_type_display = models.CharField(max_length=255, editable=False)
     time_norm = models.PositiveIntegerField(editable=False)
     tariff = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
-    quantity = models.PositiveIntegerField(default=1)
-    total_time = models.PositiveIntegerField(editable=False)
+    quantity = models.IntegerField(default=1, validators=[validate_quantity])
+    total_time = models.IntegerField(editable=False)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
     date = models.DateTimeField(default=timezone.now, editable=False)
     comment = models.TextField(blank=True, null=True)
     change_history = models.TextField(editable=False, blank=True, null=True)
+
+    def clean(self):
+        if self.quantity == 0:
+            raise ValidationError(_('Quantity cannot be zero.'))
 
     def save(self, *args, **kwargs):
         if not self.pk and self.author:
@@ -343,6 +358,7 @@ class StandardOperationsJournal(models.Model):
         self.tariff = self.work_type.tariff_cost
         self.total_time = self.time_norm * self.quantity
         self.total_cost = self.quantity * self.tariff
+        self.clean()
         super().save(*args, **kwargs)
 
     def __str__(self):

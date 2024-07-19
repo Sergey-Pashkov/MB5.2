@@ -151,25 +151,58 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 
+from django.contrib import admin
+from .models import StandardOperationsJournal
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
+
+class StandardOperationsJournalForm(ModelForm):
+    class Meta:
+        model = StandardOperationsJournal
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        quantity = cleaned_data.get("quantity")
+        if quantity == 0:
+            raise ValidationError({
+                'quantity': ValidationError(_('Quantity cannot be zero.'), code='invalid')
+            })
+        return cleaned_data
+
+
+
+
+
+
+
 
 from django.contrib import admin
-from django.utils.html import format_html
-from django.urls import reverse
 from .models import StandardOperationsJournal
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
-@admin.register(StandardOperationsJournal)
+class StandardOperationsJournalForm(ModelForm):
+    class Meta:
+        model = StandardOperationsJournal
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        quantity = cleaned_data.get("quantity")
+        if quantity == 0:
+            self.add_error('quantity', ValidationError(_('Quantity cannot be zero.'), code='invalid'))
+        return cleaned_data
+
 class StandardOperationsJournalAdmin(admin.ModelAdmin):
-    list_display = ('view_link', 'author_name', 'client_display', 'group', 'work_type_display', 'total_time', 'total_cost', 'date')
-    readonly_fields = ('id', 'author', 'author_name', 'client_display', 'group', 'work_type_display', 'time_norm', 'tariff', 'total_time', 'total_cost', 'date', 'change_history')
-    fields = ('id', 'author', 'author_name', 'client', 'client_display', 'group', 'work_type', 'work_type_display', 'time_norm', 'tariff', 'quantity', 'total_time', 'total_cost', 'date', 'comment', 'change_history')
+    form = StandardOperationsJournalForm
+    list_display = ('id', 'author_name', 'client_display', 'work_type_display', 'total_time', 'total_cost', 'date')
+    readonly_fields = ('author_name', 'client_display', 'group', 'work_type_display', 'time_norm', 'tariff', 'total_time', 'total_cost', 'date')
 
     def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            obj.author = request.user
-            obj.author_name = request.user.get_full_name()
-        super().save_model(request, obj, form, change)
+        if form.is_valid():
+            obj.save()
+        else:
+            super().save_model(request, obj, form, change)
 
-    def view_link(self, obj):
-        return format_html('<a href="{}">{}</a>', reverse('admin:Accounting_button_standardoperationsjournal_change', args=[obj.id]), obj.id)
-    view_link.short_description = 'ID'
-    view_link.admin_order_field = 'id'
+admin.site.register(StandardOperationsJournal, StandardOperationsJournalAdmin)
