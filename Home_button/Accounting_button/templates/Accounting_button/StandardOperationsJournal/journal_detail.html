@@ -1,19 +1,48 @@
 {% extends 'Accounting_button/base.html' %}
-{% block title %}Journal Entry Details{% endblock %}
+{% load widget_tweaks %}
+
+{% block title %}Journal Detail{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Journal Entry Details</h1>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Entry ID: {{ journal.id }}</h5>
-            <p class="card-text"><strong>Client:</strong> {{ journal.client_display }}</p>
-            <p class="card-text"><strong>Author:</strong> {{ journal.author_name }}</p>
-            <p class="card-text"><strong>Date:</strong> {{ journal.date }}</p>
-            <p class="card-text"><strong>Description:</strong> {{ journal.description }}</p>
-            <a href="{% url 'journal_update' journal.pk %}" class="btn btn-primary">Edit</a>
-            <a href="{% url 'journal_list' %}" class="btn btn-secondary">Back to List</a>
-        </div>
+    <div class="alert alert-info" role="alert">
+        Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!
     </div>
+    <h1>Journal Entry {{ journal.id }}</h1>
+    <table class="table table-bordered mt-3">
+        <tbody>
+            <tr>
+                <th>Group</th>
+                <td>{{ journal.group }}</td>
+            </tr>
+            <tr>
+                <th>Work Type</th>
+                <td>{{ journal.work_type }}</td>
+            </tr>
+            <tr>
+                <th>Time Norm</th>
+                <td>{{ journal.time_norm }}</td>
+            </tr>
+            <tr>
+                <th>Tariff</th>
+                <td>{{ journal.tariff }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ journal.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Total Time</th>
+                <td>{{ journal.total_time }}</td>
+            </tr>
+            <tr>
+                <th>Total Cost</th>
+                <td>{{ journal.total_cost }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'journal_update' journal.id %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'journal_delete' journal.id %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'journal_list' %}" class="btn btn-secondary">Back to List</a>
 </div>
 {% endblock %}
