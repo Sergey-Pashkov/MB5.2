@@ -305,3 +305,45 @@ class WorkType(models.Model):
 
     def __str__(self):
         return self.name  # Отображение названия группы видов работ при вызове str()
+
+
+
+
+
+
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+from simple_history.models import HistoricalRecords
+
+class StandardOperationsJournal(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    author_name = models.CharField(max_length=255, editable=False)
+    client = models.ForeignKey('Client', on_delete=models.CASCADE)
+    client_display = models.CharField(max_length=255, editable=False)
+    group = models.CharField(max_length=255, editable=False)
+    work_type = models.ForeignKey('WorkType', on_delete=models.CASCADE)
+    work_type_display = models.CharField(max_length=255, editable=False)
+    time_norm = models.PositiveIntegerField(editable=False)
+    tariff = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+    quantity = models.PositiveIntegerField(default=1)
+    total_time = models.PositiveIntegerField(editable=False)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+    date = models.DateTimeField(default=timezone.now, editable=False)
+    comment = models.TextField(blank=True, null=True)
+    change_history = models.TextField(editable=False, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.author:
+            self.author_name = self.author.get_full_name()
+        self.client_display = f"{self.client.id} {self.client.short_name}"
+        self.group = self.work_type.work_type_group.name  # Присваиваем строковое значение имени группы
+        self.work_type_display = f"{self.work_type.id} {self.work_type.name}"
+        self.time_norm = self.work_type.time_norm
+        self.tariff = self.work_type.tariff_cost
+        self.total_time = self.time_norm * self.quantity
+        self.total_cost = self.quantity * self.tariff
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.author_name} - {self.client_display} - {self.work_type_display}"

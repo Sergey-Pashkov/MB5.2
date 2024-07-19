@@ -147,3 +147,29 @@ class ClientAdmin(admin.ModelAdmin):
         if not obj.author:
             obj.author = request.user
         obj.save()
+
+
+
+
+
+from django.contrib import admin
+from django.utils.html import format_html
+from django.urls import reverse
+from .models import StandardOperationsJournal
+
+@admin.register(StandardOperationsJournal)
+class StandardOperationsJournalAdmin(admin.ModelAdmin):
+    list_display = ('view_link', 'author_name', 'client_display', 'group', 'work_type_display', 'total_time', 'total_cost', 'date')
+    readonly_fields = ('id', 'author', 'author_name', 'client_display', 'group', 'work_type_display', 'time_norm', 'tariff', 'total_time', 'total_cost', 'date', 'change_history')
+    fields = ('id', 'author', 'author_name', 'client', 'client_display', 'group', 'work_type', 'work_type_display', 'time_norm', 'tariff', 'quantity', 'total_time', 'total_cost', 'date', 'comment', 'change_history')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.author = request.user
+            obj.author_name = request.user.get_full_name()
+        super().save_model(request, obj, form, change)
+
+    def view_link(self, obj):
+        return format_html('<a href="{}">{}</a>', reverse('admin:Accounting_button_standardoperationsjournal_change', args=[obj.id]), obj.id)
+    view_link.short_description = 'ID'
+    view_link.admin_order_field = 'id'
