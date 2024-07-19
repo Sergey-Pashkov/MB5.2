@@ -1,0 +1,46 @@
+{% extends 'Accounting_button/base.html' %}
+
+{% block title %}{{ view.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ view.title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+            <label>Client Display</label>
+            <input type="text" class="form-control" value="{{ object.client_display }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Group</label>
+            <input type="text" class="form-control" value="{{ object.group }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Work Type Display</label>
+            <input type="text" class="form-control" value="{{ object.work_type_display }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Time Norm</label>
+            <input type="text" class="form-control" value="{{ object.time_norm }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Tariff</label>
+            <input type="text" class="form-control" value="{{ object.tariff }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Total Time</label>
+            <input type="text" class="form-control" value="{{ object.total_time }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Total Cost</label>
+            <input type="text" class="form-control" value="{{ object.total_cost }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Автор</label>
+            <input type="text" class="form-control" value="{{ object.author_name }}" readonly>
+        </div>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

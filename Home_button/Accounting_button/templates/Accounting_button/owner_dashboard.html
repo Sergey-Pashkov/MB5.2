@@ -14,13 +14,13 @@
     <a href="{% url 'tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
     
     <!-- Кнопка для перехода на страницу штатного расписания -->
-    <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning mb-3">View Staff Schedule</a>
+    <a href="{% url 'staff_schedule_list' %}" class="btn btn-warning mb-3">Штатное расписание</a>
     
     <!-- Кнопка для перехода на справочник должностей организаторов -->
     <a href="{% url 'organizer_positions_list' %}" class="btn btn-warning mb-3">Справочник должностей организаторов</a>
     
     <!-- Кнопка для перехода на справочник тарифов -->
-    <a href="{% url 'organizer_tariffs_list' %}" class="btn btn-warning mb-3">View Tariffs Directory</a>
+    <a href="{% url 'organizer_tariffs_list' %}" class="btn btn-warning mb-3">Тарифы организаторов</a> 
     
     <!-- Кнопка для перехода на справочник систем налогообложения -->
     <a href="{% url 'tax_systems_list' %}" class="btn btn-warning mb-3">Системы налогообложения</a>
@@ -36,5 +36,8 @@
 
     <!-- Кнопка для перехода на историю изменений видов работ -->
     <a href="{% url 'worktype_history' %}" class="btn btn-primary mb-3">История изменений видов работ</a>
+    
+    <!-- Кнопка для перехода на журнал стандартных операций -->
+    <a href="{% url 'journal_list' %}" class="btn btn-primary mb-3">Журнал стандартных операций</a>
 </div>
 {% endblock %}

@@ -764,3 +764,50 @@ def worktype_revert(request, pk, history_id):
     historical_instance.instance.save()
     update_change_reason(historical_instance.instance, 'Reverted to a previous version')
     return redirect('worktype_history')
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import StandardOperationsJournal
+from .forms import StandardOperationsJournalForm
+
+# Accounting_button/views.py
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import StandardOperationsJournal
+
+# Accounting_button/views.py
+
+from django.views.generic import ListView
+from .models import StandardOperationsJournal
+
+class StandardOperationsJournalListView(ListView):
+    model = StandardOperationsJournal
+    template_name = 'Accounting_button/StandardOperationsJournal/journal_list.html'
+    context_object_name = 'journals'  # Убедитесь, что это имя используется в шаблоне
+
+    def get_queryset(self):
+        # Добавьте любые необходимые фильтры, если они есть
+        return StandardOperationsJournal.objects.all()
+
+
+
+class StandardOperationsJournalCreateView(CreateView):
+    model = StandardOperationsJournal
+    fields = '__all__'
+    template_name = 'Accounting_button/StandardOperationsJournal/journal_form.html'
+    success_url = '/accounting/journals/'
+
+class StandardOperationsJournalUpdateView(UpdateView):
+    model = StandardOperationsJournal
+    fields = '__all__'
+    template_name = 'Accounting_button/StandardOperationsJournal/journal_form.html'
+    success_url = '/accounting/journals/'
+
+class StandardOperationsJournalDeleteView(DeleteView):
+    model = StandardOperationsJournal
+    template_name = 'Accounting_button/StandardOperationsJournal/journal_confirm_delete.html'
+    success_url = '/accounting/journals/'

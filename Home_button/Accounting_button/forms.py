@@ -54,3 +54,19 @@ class WorkTypeForm(forms.ModelForm):
             'job_description': forms.Textarea(attrs={'class': 'form-control'}),  # Текстовое поле для описания работы
             'hide_in_list': forms.CheckboxInput(attrs={'class': 'form-check-input'}),  # Чекбокс для скрытия в списке
         }
+
+
+
+
+
+from django import forms
+from .models import StandardOperationsJournal
+
+# Определение формы для модели StandardOperationsJournal
+class StandardOperationsJournalForm(forms.ModelForm):
+    class Meta:
+        model = StandardOperationsJournal
+        fields = ['client', 'work_type', 'quantity', 'comment']  # Исключили 'date'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }

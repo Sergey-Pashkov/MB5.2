@@ -1,0 +1,10 @@
+{% extends 'Accounting_button/base.html' %}
+{% block content %}
+  <h2>Delete Journal</h2>
+  <p>Are you sure you want to delete this journal?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary" href="{% url 'journal_detail' journal.pk %}">Cancel</a>
+  </form>
+{% endblock %}
