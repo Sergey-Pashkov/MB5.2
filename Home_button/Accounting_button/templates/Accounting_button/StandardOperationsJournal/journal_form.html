@@ -1,46 +1,64 @@
 {% extends 'Accounting_button/base.html' %}
-
-{% block title %}{{ view.title }}{% endblock %}
+{% load widget_tweaks %}
+{% block title %}Journal Entry Form{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>{{ view.title }}</h1>
-    <form method="post">
+    <h1>{{ title }}</h1>
+    <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <div class="form-group">
-            <label>Client Display</label>
-            <input type="text" class="form-control" value="{{ object.client_display }}" readonly>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="client">Client</label>
+                {% render_field form.client class="form-control" %}
+                <div class="invalid-feedback">
+                    Please provide a valid client.
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="author">Author</label>
+                {% render_field form.author class="form-control" %}
+                <div class="invalid-feedback">
+                    Please provide a valid author.
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Group</label>
-            <input type="text" class="form-control" value="{{ object.group }}" readonly>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="date">Date</label>
+                {% render_field form.date class="form-control" %}
+                <div class="invalid-feedback">
+                    Please provide a valid date.
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="description">Description</label>
+                {% render_field form.description class="form-control" %}
+                <div class="invalid-feedback">
+                    Please provide a description.
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Work Type Display</label>
-            <input type="text" class="form-control" value="{{ object.work_type_display }}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Time Norm</label>
-            <input type="text" class="form-control" value="{{ object.time_norm }}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Tariff</label>
-            <input type="text" class="form-control" value="{{ object.tariff }}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Total Time</label>
-            <input type="text" class="form-control" value="{{ object.total_time }}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Total Cost</label>
-            <input type="text" class="form-control" value="{{ object.total_cost }}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Автор</label>
-            <input type="text" class="form-control" value="{{ object.author_name }}" readonly>
-        </div>
-        <button type="submit" class="btn btn-success">Сохранить</button>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'journal_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 {% endblock %}

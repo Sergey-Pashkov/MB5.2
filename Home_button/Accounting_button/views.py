@@ -768,35 +768,46 @@ def worktype_revert(request, pk, history_id):
 
 
 
+
+
+
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from .models import StandardOperationsJournal
-
-# Accounting_button/views.py
-
 
 class StandardOperationsJournalListView(ListView):
     model = StandardOperationsJournal
     template_name = 'Accounting_button/StandardOperationsJournal/journal_list.html'
     context_object_name = 'journals'
 
-
 class StandardOperationsJournalCreateView(CreateView):
     model = StandardOperationsJournal
     fields = '__all__'
     template_name = 'Accounting_button/StandardOperationsJournal/journal_form.html'
-    success_url = '/accounting/journals/'
+    success_url = reverse_lazy('journal_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Create Journal Entry'
+        return context
 
 class StandardOperationsJournalUpdateView(UpdateView):
     model = StandardOperationsJournal
     fields = '__all__'
     template_name = 'Accounting_button/StandardOperationsJournal/journal_form.html'
-    success_url = '/accounting/journals/'
+    success_url = reverse_lazy('journal_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Journal Entry'
+        return context
 
 class StandardOperationsJournalDeleteView(DeleteView):
     model = StandardOperationsJournal
     template_name = 'Accounting_button/StandardOperationsJournal/journal_confirm_delete.html'
-    success_url = '/accounting/journals/'
+    success_url = reverse_lazy('journal_list')
 
 class StandardOperationsJournalDetailView(DetailView):
     model = StandardOperationsJournal
     template_name = 'Accounting_button/StandardOperationsJournal/journal_detail.html'
+    context_object_name = 'journal'

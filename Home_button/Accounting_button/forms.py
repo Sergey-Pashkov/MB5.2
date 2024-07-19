@@ -62,11 +62,13 @@ class WorkTypeForm(forms.ModelForm):
 from django import forms
 from .models import StandardOperationsJournal
 
-# Определение формы для модели StandardOperationsJournal
 class StandardOperationsJournalForm(forms.ModelForm):
     class Meta:
         model = StandardOperationsJournal
-        fields = ['client', 'work_type', 'quantity', 'comment']  # Исключили 'date'
+        fields = '__all__'
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
+            'client': forms.Select(attrs={'class': 'form-control'}),
+            'author': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
