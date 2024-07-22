@@ -12,6 +12,10 @@
     <table class="table table-bordered mt-3">
         <tbody>
             <tr>
+                <th>Author</th>
+                <td>{{ journal.author_name }}</td> <!-- Добавлено поле автор -->
+            </tr>
+            <tr>
                 <th>Group</th>
                 <td>{{ journal.group }}</td>
             </tr>
@@ -38,6 +42,10 @@
             <tr>
                 <th>Total Cost</th>
                 <td>{{ journal.total_cost }}</td>
+            </tr>
+            <tr>
+                <th>Date and Time</th>
+                <td>{{ journal.date|date:"d-m-Y H:i" }}</td> <!-- Добавлено поле дата и время -->
             </tr>
         </tbody>
     </table>

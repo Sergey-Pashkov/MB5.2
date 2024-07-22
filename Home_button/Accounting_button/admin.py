@@ -194,15 +194,21 @@ class StandardOperationsJournalForm(ModelForm):
             self.add_error('quantity', ValidationError(_('Quantity cannot be zero.'), code='invalid'))
         return cleaned_data
 
+
+
+
 class StandardOperationsJournalAdmin(admin.ModelAdmin):
     form = StandardOperationsJournalForm
     list_display = ('id', 'author_name', 'client_display', 'work_type_display', 'total_time', 'total_cost', 'date')
     readonly_fields = ('author_name', 'client_display', 'group', 'work_type_display', 'time_norm', 'tariff', 'total_time', 'total_cost', 'date')
 
     def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
         if form.is_valid():
             obj.save()
         else:
             super().save_model(request, obj, form, change)
 
 admin.site.register(StandardOperationsJournal, StandardOperationsJournalAdmin)
+
