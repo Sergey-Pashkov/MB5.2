@@ -13,33 +13,52 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="id_group">Group</label>
-            {% render_field form.group class="form-control" id="id_group" %}
+            <input type="text" class="form-control" id="id_group" value="{{ form.instance.group }}" disabled>
         </div>
         <div class="form-group">
             <label for="id_work_type">Work Type</label>
-            {% render_field form.work_type class="form-control" id="id_work_type" %}
+            {{ form.work_type|add_class:"form-control" }}
         </div>
         <div class="form-group">
             <label for="id_time_norm">Time Norm</label>
-            {% render_field form.time_norm class="form-control" id="id_time_norm" %}
+            <input type="text" class="form-control" id="id_time_norm" value="{{ form.instance.time_norm }}" disabled>
         </div>
         <div class="form-group">
             <label for="id_tariff">Tariff</label>
-            {% render_field form.tariff class="form-control" id="id_tariff" %}
+            <input type="text" class="form-control" id="id_tariff" value="{{ form.instance.tariff }}" disabled>
         </div>
         <div class="form-group">
             <label for="id_quantity">Quantity</label>
-            {% render_field form.quantity class="form-control" id="id_quantity" %}
+            {{ form.quantity|add_class:"form-control" }}
         </div>
         <div class="form-group">
             <label for="id_total_time">Total Time</label>
-            {% render_field form.total_time class="form-control" id="id_total_time" %}
+            <input type="text" class="form-control" id="id_total_time" value="{{ form.instance.total_time }}" disabled>
         </div>
         <div class="form-group">
             <label for="id_total_cost">Total Cost</label>
-            {% render_field form.total_cost class="form-control" id="id_total_cost" %}
+            <input type="text" class="form-control" id="id_total_cost" value="{{ form.instance.total_cost }}" disabled>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'journal_list' %}" class="btn btn-secondary">Back to List</a>
     </form>
 </div>
+
+<script>
+    document.getElementById('id_quantity').addEventListener('input', function() {
+        let quantity = parseFloat(this.value);
+        let timeNorm = parseFloat(document.getElementById('id_time_norm').value);
+        let tariff = parseFloat(document.getElementById('id_tariff').value);
+
+        if (!isNaN(quantity) && !isNaN(timeNorm)) {
+            let totalTime = quantity * timeNorm;
+            document.getElementById('id_total_time').value = totalTime;
+        }
+
+        if (!isNaN(quantity) && !isNaN(timeNorm) && !isNaN(tariff)) {
+            let totalCost = quantity * timeNorm * tariff;
+            document.getElementById('id_total_cost').value = totalCost;
+        }
+    });
+</script>
 {% endblock %}

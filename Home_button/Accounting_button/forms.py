@@ -57,10 +57,6 @@ class WorkTypeForm(forms.ModelForm):
 
 
 
-
-
-
-
 from django import forms
 from .models import StandardOperationsJournal
 
@@ -71,28 +67,50 @@ class StandardOperationsJournalForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(StandardOperationsJournalForm, self).__init__(*args, **kwargs)
-        self.fields['group'] = forms.CharField(
-            initial=self.instance.group if self.instance else '',
-            disabled=True,
-            label='Group'
-        )
-        self.fields['time_norm'] = forms.CharField(
-            initial=self.instance.time_norm if self.instance else '',
-            disabled=True,
-            label='Time Norm'
-        )
-        self.fields['tariff'] = forms.CharField(
-            initial=self.instance.tariff if self.instance else '',
-            disabled=True,
-            label='Tariff'
-        )
-        self.fields['total_time'] = forms.CharField(
-            initial=self.instance.total_time if self.instance else '',
-            disabled=True,
-            label='Total Time'
-        )
-        self.fields['total_cost'] = forms.CharField(
-            initial=self.instance.total_cost if self.instance else '',
-            disabled=True,
-            label='Total Cost'
-        )
+        if self.instance and self.instance.pk:
+            self.fields['group'] = forms.CharField(
+                initial=self.instance.group,
+                disabled=True,
+                label='Group'
+            )
+            self.fields['time_norm'] = forms.CharField(
+                initial=self.instance.time_norm,
+                disabled=True,
+                label='Time Norm'
+            )
+            self.fields['tariff'] = forms.CharField(
+                initial=self.instance.tariff,
+                disabled=True,
+                label='Tariff'
+            )
+            self.fields['total_time'] = forms.CharField(
+                initial=self.instance.total_time,
+                disabled=True,
+                label='Total Time'
+            )
+            self.fields['total_cost'] = forms.CharField(
+                initial=self.instance.total_cost,
+                disabled=True,
+                label='Total Cost'
+            )
+        else:
+            self.fields['group'] = forms.CharField(
+                disabled=True,
+                label='Group'
+            )
+            self.fields['time_norm'] = forms.CharField(
+                disabled=True,
+                label='Time Norm'
+            )
+            self.fields['tariff'] = forms.CharField(
+                disabled=True,
+                label='Tariff'
+            )
+            self.fields['total_time'] = forms.CharField(
+                disabled=True,
+                label='Total Time'
+            )
+            self.fields['total_cost'] = forms.CharField(
+                disabled=True,
+                label='Total Cost'
+            )
