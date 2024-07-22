@@ -511,11 +511,33 @@ class ClientUpdateView(UpdateView):
         return form
 
 # Представление для удаления клиента (доступно только для собственников)
-@method_decorator(owner_required, name='dispatch')
-class ClientDeleteView(DeleteView):
-    model = Client  # Указываем модель для удаления
-    template_name = 'Accounting_button/Client_list/client_confirm_delete.html'
-    success_url = reverse_lazy('client_list')  # URL для перенаправления после успешного удаления
+from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models.deletion import ProtectedError
+from django.contrib import messages
+from .models import Client
+from .decorators import owner_required
+
+@owner_required
+def client_delete(request, pk):
+    """
+    Представление для удаления клиента.
+    Доступно только для пользователей с типом 'owner'.
+    Отображает страницу подтверждения перед удалением.
+    """
+    client = get_object_or_404(Client, pk=pk)
+    if request.method == 'POST':
+        try:
+            client.delete()
+            messages.success(request, 'Client deleted successfully.')
+            return redirect('client_list')
+        except ProtectedError:
+            messages.error(request, 'Удаление невозможно, имеются связанные записи.')
+            return redirect('client_list')
+    return render(request, 'Accounting_button/Client_list/client_confirm_delete.html', {'client': client})
+
+
+
+
 
 
 from django.http import HttpResponse

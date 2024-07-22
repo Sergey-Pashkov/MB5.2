@@ -12,7 +12,7 @@ from .views import (  # Импорт всех нужных представле�
     OrganizerPositionDirectoryUpdateView, OrganizerPositionDirectoryDeleteView,
     OrganizerTariffListView, OrganizerTariffCreateView, OrganizerTariffDetailView,
     OrganizerTariffUpdateView, OrganizerTariffDeleteView,
-    ClientListView, ClientDetailView, ClientCreateView, ClientUpdateView, ClientDeleteView, export_clients,
+    ClientListView, ClientDetailView, ClientCreateView, ClientUpdateView, export_clients,
     TaxSystemListView, TaxSystemCreateView, TaxSystemDetailView, TaxSystemUpdateView, TaxSystemDeleteView,
     worktypegroup_list, worktypegroup_create, worktypegroup_edit, worktypegroup_delete,
     worktype_list, worktype_create, worktype_edit, worktype_delete, worktype_view, export_worktypes_to_excel, worktype_history, worktype_revert,
@@ -23,6 +23,8 @@ from .models import WorkType
 from django.urls import path
 from . import views  # Импортируем представления из текущего модуля
 
+from django.urls import path
+from .views import client_delete  # Убедитесь, что импортируете client_delete, а не ClientDeleteView
 
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),  # Список должностей
@@ -73,8 +75,11 @@ urlpatterns = [
     path('clients/<int:pk>/', ClientDetailView.as_view(), name='client_detail'),  # Просмотр деталей клиента
     path('clients/new/', ClientCreateView.as_view(), name='client_create'),  # Создание нового клиента
     path('clients/<int:pk>/edit/', ClientUpdateView.as_view(), name='client_edit'),  # Редактирование клиента
-    path('clients/<int:pk>/delete/', ClientDeleteView.as_view(), name='client_delete'),  # Удаление клиента
+    #path('clients/<int:pk>/delete/', ClientDeleteView.as_view(), name='client_delete'),  # Удаление клиента
     path('export_clients/', export_clients, name='export_clients'),  # Экспорт клиентов в Excel
+
+    path('clients/<int:pk>/delete/', client_delete, name='client_delete'),  # Обновленный путь для удаления клиента
+    
 
     path('worktypegroups/', worktypegroup_list, name='worktypegroup_list'),  # Список групп видов работ
     path('worktypegroups/create/', worktypegroup_create, name='worktypegroup_create'),  # Создание новой группы видов работ

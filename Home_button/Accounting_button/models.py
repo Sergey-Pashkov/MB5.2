@@ -337,10 +337,17 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 
 
+
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 class StandardOperationsJournal(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     author_name = models.CharField(max_length=255, editable=False)
-    client = models.ForeignKey('Client', on_delete=models.CASCADE)
+    client = models.ForeignKey('Client', on_delete=models.PROTECT)  # Изменено на PROTECT
     client_display = models.CharField(max_length=255, editable=False)
     group = models.CharField(max_length=255, editable=False)
     work_type = models.ForeignKey('WorkType', on_delete=models.PROTECT)  # Изменено на PROTECT
