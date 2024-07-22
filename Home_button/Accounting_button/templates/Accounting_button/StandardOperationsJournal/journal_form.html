@@ -14,6 +14,7 @@
         <div class="form-group">
             <label for="id_group">Group</label>
             <input type="text" class="form-control" id="id_group" value="{{ form.instance.group }}" disabled>
+            <input type="hidden" id="id_group_hidden" name="group" value="{{ form.instance.group }}">
         </div>
         <div class="form-group">
             <label for="id_work_type">Work Type</label>
@@ -49,6 +50,20 @@
 </div>
 
 <script>
+    document.getElementById('id_work_type').addEventListener('change', function() {
+        let workTypeId = this.value;
+        fetch(`/accounting/ajax/get-work-type-group/?work_type_id=${workTypeId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.group) {
+                    document.getElementById('id_group').value = data.group;
+                    document.getElementById('id_group_hidden').value = data.group;  // Обновляем скрытое поле
+                } else {
+                    console.error(data.error);
+                }
+            });
+    });
+
     document.getElementById('id_quantity').addEventListener('input', function() {
         let quantity = parseFloat(this.value);
         let timeNorm = parseFloat(document.getElementById('id_time_norm').value);

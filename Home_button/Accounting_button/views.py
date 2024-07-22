@@ -775,6 +775,11 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from .models import StandardOperationsJournal
 
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView
+from .models import StandardOperationsJournal
+from .forms import StandardOperationsJournalForm 
+
 class StandardOperationsJournalListView(ListView):
     model = StandardOperationsJournal
     template_name = 'Accounting_button/StandardOperationsJournal/journal_list.html'
@@ -791,16 +796,24 @@ class StandardOperationsJournalCreateView(CreateView):
         context['title'] = 'Create Journal Entry'
         return context
 
+
+
 class StandardOperationsJournalUpdateView(UpdateView):
     model = StandardOperationsJournal
-    fields = '__all__'
+    form_class = StandardOperationsJournalForm
     template_name = 'Accounting_button/StandardOperationsJournal/journal_form.html'
     success_url = reverse_lazy('journal_list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Edit Journal Entry'
-        return context
+    def form_valid(self, form):
+        # Обновляем значение поля group перед сохранением формы
+        work_type = form.cleaned_data.get('work_type')
+        if work_type:
+            form.instance.group = work_type.work_type_group.name
+        return super().form_valid(form)
+
+
+
+
 
 class StandardOperationsJournalDeleteView(DeleteView):
     model = StandardOperationsJournal
@@ -811,3 +824,27 @@ class StandardOperationsJournalDetailView(DetailView):
     model = StandardOperationsJournal
     template_name = 'Accounting_button/StandardOperationsJournal/journal_detail.html'
     context_object_name = 'journal'
+
+
+
+from django.http import JsonResponse
+from .models import WorkType
+
+def get_work_type_group(request):
+    work_type_id = request.GET.get('work_type_id', None)  # Получаем work_type_id из запроса
+    if work_type_id:
+        try:
+            work_type = WorkType.objects.get(id=work_type_id)  # Пытаемся найти WorkType по id
+            data = {
+                'group': work_type.work_type_group.name,  # Формируем ответ с именем группы
+            }
+        except WorkType.DoesNotExist:
+            data = {
+                'error': 'WorkType not found'  # Если WorkType не найден, возвращаем ошибку
+            }
+    else:
+        data = {
+            'error': 'Invalid request'  # Если work_type_id не передан, возвращаем ошибку
+        }
+    return JsonResponse(data) 
+

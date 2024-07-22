@@ -57,8 +57,10 @@ class WorkTypeForm(forms.ModelForm):
 
 
 
+
 from django import forms
 from .models import StandardOperationsJournal
+
 
 class StandardOperationsJournalForm(forms.ModelForm):
     class Meta:
@@ -70,7 +72,7 @@ class StandardOperationsJournalForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields['group'] = forms.CharField(
                 initial=self.instance.group,
-                disabled=True,
+                disabled=True,  # Делаем поле только для чтения в форме
                 label='Group'
             )
             self.fields['time_norm'] = forms.CharField(

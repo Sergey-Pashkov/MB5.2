@@ -18,6 +18,11 @@ from .views import (  # Импорт всех нужных представле�
     worktype_list, worktype_create, worktype_edit, worktype_delete, worktype_view, export_worktypes_to_excel, worktype_history, worktype_revert,
     StandardOperationsJournalListView, StandardOperationsJournalCreateView, StandardOperationsJournalUpdateView, StandardOperationsJournalDeleteView, StandardOperationsJournalDetailView,
 )
+from django.http import JsonResponse
+from .models import WorkType 
+from django.urls import path
+from . import views  # Импортируем представления из текущего модуля
+
 
 urlpatterns = [
     path('positions/', PositionDirectoryListView.as_view(), name='positions_list'),  # Список должностей
@@ -90,6 +95,7 @@ urlpatterns = [
     path('journals/update/<int:pk>/', StandardOperationsJournalUpdateView.as_view(), name='journal_update'),  # Редактирование стандартной операции
     path('journals/delete/<int:pk>/', StandardOperationsJournalDeleteView.as_view(), name='journal_delete'),  # Удаление стандартной операции
     path('journals/<int:pk>/', StandardOperationsJournalDetailView.as_view(), name='journal_detail'),  # Добавьте этот маршрут
+
+    path('ajax/get-work-type-group/', views.get_work_type_group, name='get_work_type_group'),
+    # Добавляем URL для обработки AJAX-запроса для получения данных группы работы
 ]
-
-

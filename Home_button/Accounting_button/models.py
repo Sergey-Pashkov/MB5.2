@@ -327,6 +327,16 @@ def validate_quantity(value):
             params={'value': value},
         )
 
+
+
+
+
+
+from django.db import models
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+
 class StandardOperationsJournal(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     author_name = models.CharField(max_length=255, editable=False)
@@ -349,6 +359,7 @@ class StandardOperationsJournal(models.Model):
             raise ValidationError(_('Quantity cannot be zero.'))
 
     def save(self, *args, **kwargs):
+        # Обновляем значения перед сохранением
         if not self.pk and self.author:
             self.author_name = self.author.get_full_name()
         self.client_display = f"{self.client.id} {self.client.short_name}"
