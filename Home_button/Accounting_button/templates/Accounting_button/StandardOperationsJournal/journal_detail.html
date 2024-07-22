@@ -44,6 +44,10 @@
                 <td>{{ journal.total_cost }}</td>
             </tr>
             <tr>
+                <th>Client</th>
+                <td>{{ journal.client_display }}</td> <!-- Добавлено поле клиент -->
+            </tr>
+            <tr>
                 <th>Date and Time</th>
                 <td>{{ journal.date|date:"d-m-Y H:i" }}</td> <!-- Добавлено поле дата и время -->
             </tr>

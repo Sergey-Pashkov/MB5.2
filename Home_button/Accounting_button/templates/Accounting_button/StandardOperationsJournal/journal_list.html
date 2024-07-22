@@ -19,7 +19,8 @@
                 <th>Quantity</th>
                 <th>Total Time</th>
                 <th>Total Cost</th>
-                <th>Date and Time</th> <!-- Добавлено поле дата и время -->
+                <th>Client</th> <!-- Добавлено поле клиент -->
+                <th>Date and Time</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -35,7 +36,8 @@
                 <td>{{ journal.quantity }}</td>
                 <td>{{ journal.total_time }}</td>
                 <td>{{ journal.total_cost }}</td>
-                <td>{{ journal.date|date:"d-m-Y H:i" }}</td> <!-- Форматированное отображение даты и времени -->
+                <td>{{ journal.client_display }}</td> <!-- Отображение значения клиента -->
+                <td>{{ journal.date|date:"d-m-Y H:i" }}</td>
                 <td>
                     <a href="{% url 'journal_detail' journal.id %}" class="btn btn-info btn-sm">View</a>
                     <a href="{% url 'journal_update' journal.id %}" class="btn btn-warning btn-sm">Edit</a>
