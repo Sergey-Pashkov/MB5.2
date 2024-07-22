@@ -39,6 +39,10 @@
             <label for="id_total_cost">Total Cost</label>
             <input type="text" class="form-control" id="id_total_cost" value="{{ form.instance.total_cost }}" disabled>
         </div>
+        <div class="form-group">
+            <label for="id_client_display">Client</label>
+            <input type="text" class="form-control" id="id_client_display" value="{{ form.instance.client_display }}" disabled>
+        </div>
         <button type="submit" class="btn btn-primary">Save</button>
         <a href="{% url 'journal_list' %}" class="btn btn-secondary">Back to List</a>
     </form>
