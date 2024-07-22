@@ -8,7 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView as AuthLoginView
-
+from django.db.models.deletion import ProtectedError  # Правильный импорт
 
 class LoginView(AuthLoginView):
     template_name = 'Accounting_button/login.html'
@@ -671,6 +671,13 @@ def worktype_edit(request, pk):
         form = WorkTypeForm(instance=worktype)
     return render(request, 'Accounting_button/WorkTypes/form.html', {'form': form})
 
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models.deletion import ProtectedError  # Правильный импорт из django.db.models.deletion
+from django.contrib import messages
+from .models import WorkType
+
 @unique_owner_required
 def worktype_delete(request, pk):
     """
@@ -680,9 +687,16 @@ def worktype_delete(request, pk):
     """
     worktype = get_object_or_404(WorkType, pk=pk)
     if request.method == 'POST':
-        worktype.delete()
-        return redirect('worktype_list')
+        try:
+            worktype.delete()
+            messages.success(request, 'Work type deleted successfully.')
+            return redirect('worktype_list')
+        except ProtectedError:
+            messages.error(request, 'Удаление невозможно, имеются связанные записи. Cannot delete work type because it is referenced by other records.')
+            return redirect('worktype_list')
     return render(request, 'Accounting_button/WorkTypes/confirm_delete.html', {'worktype': worktype})
+
+
 
 
 
@@ -810,9 +824,6 @@ class StandardOperationsJournalUpdateView(UpdateView):
         if work_type:
             form.instance.group = work_type.work_type_group.name
         return super().form_valid(form)
-
-
-
 
 
 class StandardOperationsJournalDeleteView(DeleteView):

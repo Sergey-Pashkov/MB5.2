@@ -85,6 +85,7 @@ urlpatterns = [
     path('worktypes/create/', worktype_create, name='worktype_create'),  # Создание нового вида работ
     path('worktypes/edit/<int:pk>/', worktype_edit, name='worktype_edit'),  # Редактирование вида работ
     path('worktypes/delete/<int:pk>/', worktype_delete, name='worktype_delete'),  # Удаление вида работ
+
     path('worktypes/view/<int:pk>/', worktype_view, name='worktype_view'),  # Просмотр вида работ
     path('worktypes/export/', export_worktypes_to_excel, name='worktype_export'),  # Экспорт видов работ в Excel
     path('worktypes/history/', worktype_history, name='worktype_history'),  # История изменений видов работ за последние 30 дней

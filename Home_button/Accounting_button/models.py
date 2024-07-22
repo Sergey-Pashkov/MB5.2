@@ -331,11 +331,11 @@ def validate_quantity(value):
 
 
 
-
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+
 
 class StandardOperationsJournal(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
@@ -343,7 +343,7 @@ class StandardOperationsJournal(models.Model):
     client = models.ForeignKey('Client', on_delete=models.CASCADE)
     client_display = models.CharField(max_length=255, editable=False)
     group = models.CharField(max_length=255, editable=False)
-    work_type = models.ForeignKey('WorkType', on_delete=models.CASCADE)
+    work_type = models.ForeignKey('WorkType', on_delete=models.PROTECT)  # Изменено на PROTECT
     work_type_display = models.CharField(max_length=255, editable=False)
     time_norm = models.PositiveIntegerField(editable=False)
     tariff = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
@@ -359,16 +359,17 @@ class StandardOperationsJournal(models.Model):
             raise ValidationError(_('Quantity cannot be zero.'))
 
     def save(self, *args, **kwargs):
-        # Обновляем значения перед сохранением
         if not self.pk and self.author:
             self.author_name = self.author.get_full_name()
-        self.client_display = f"{self.client.id} {self.client.short_name}"
-        self.group = self.work_type.work_type_group.name  # Присваиваем строковое значение имени группы
-        self.work_type_display = f"{self.work_type.id} {self.work_type.name}"
-        self.time_norm = self.work_type.time_norm
-        self.tariff = self.work_type.tariff_cost
+        if self.client:
+            self.client_display = f"{self.client.id} {self.client.short_name}"
+        if self.work_type:
+            self.group = self.work_type.work_type_group.name
+            self.work_type_display = f"{self.work_type.id} {self.work_type.name}"
+            self.time_norm = self.work_type.time_norm
+            self.tariff = self.work_type.tariff_cost
         self.total_time = self.time_norm * self.quantity
-        self.total_cost = self.tariff * self.total_time 
+        self.total_cost = self.tariff * self.total_time
         self.clean()
         super().save(*args, **kwargs)
 

@@ -1,18 +1,16 @@
 {% extends 'Accounting_button/base.html' %}
-
-{% block title %}Подтверждение удаления{% endblock %}
+{% block title %}Delete Work Type{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Вы уверены, что хотите удалить вид работы "{{ worktype.name }}"?</h1>
+    <h1>Delete Work Type</h1>
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete "{{ worktype.name }}"?
+    </div>
     <form method="post">
         {% csrf_token %}
-        <div class="form-group">
-            <label>ID:</label>
-            <input type="text" class="form-control" value="{{ worktype.pk }}" readonly>
-        </div>
-        <a href="{% url 'worktype_list' %}" class="btn btn-secondary">Отмена</a>
-        <button type="submit" class="btn btn-danger">Удалить</button>
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'worktype_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}
