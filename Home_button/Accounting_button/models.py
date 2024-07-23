@@ -344,12 +344,13 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+
 class StandardOperationsJournal(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     author_name = models.CharField(max_length=255, editable=False)
     client = models.ForeignKey('Client', on_delete=models.PROTECT)  # Изменено на PROTECT
     client_display = models.CharField(max_length=255, editable=False)
-    group = models.CharField(max_length=255, editable=False)
+    group = models.ForeignKey('WorkTypeGroup', on_delete=models.PROTECT)  # Изменено на PROTECT
     work_type = models.ForeignKey('WorkType', on_delete=models.PROTECT)  # Изменено на PROTECT
     work_type_display = models.CharField(max_length=255, editable=False)
     time_norm = models.PositiveIntegerField(editable=False)
@@ -371,7 +372,7 @@ class StandardOperationsJournal(models.Model):
         if self.client:
             self.client_display = f"{self.client.id} {self.client.short_name}"
         if self.work_type:
-            self.group = self.work_type.work_type_group.name
+            self.group = self.work_type.work_type_group
             self.work_type_display = f"{self.work_type.id} {self.work_type.name}"
             self.time_norm = self.work_type.time_norm
             self.tariff = self.work_type.tariff_cost

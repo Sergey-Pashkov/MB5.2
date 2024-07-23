@@ -634,13 +634,32 @@ def worktypegroup_edit(request, pk):
     return render(request, 'Accounting_button/WorkTypeGroup/form.html', {'form': form})
 
 # Представление для удаления группы видов работ
+from django.db.models import ProtectedError
+from django.contrib import messages
+
 @owner_required
 def worktypegroup_delete(request, pk):
     worktypegroup = get_object_or_404(WorkTypeGroup, pk=pk)
     if request.method == 'POST':
-        worktypegroup.delete()
-        return redirect('worktypegroup_list')
+        try:
+            worktypegroup.delete()
+            messages.success(request, 'Work type group deleted successfully.')
+            return redirect('worktypegroup_list')
+        except ProtectedError:
+            messages.error(request, 'Удаление невозможно, имеются связанные записи.')
+            return redirect('worktypegroup_list')
     return render(request, 'Accounting_button/WorkTypeGroup/confirm_delete.html', {'worktypegroup': worktypegroup})
+
+
+
+
+
+
+
+
+
+
+
 
 
 from django.shortcuts import render, get_object_or_404, redirect
